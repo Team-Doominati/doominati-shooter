@@ -1,0 +1,26 @@
+16 12
+WWWWWWWWWWWWWWWW
+W              W
+W              W
+W       WWWWWWWW
+W       WWWWWWWW
+W              W
+W              W
+W       WWWWWWWW
+W       WWWWWWWW
+W              W
+W              W
+WWWWWWWWWWWWWWWW
+                
+                
+              P 
+                
+                
+        E     E 
+        E     E 
+                
+                
+        E     E 
+        E     E 
+                
+Just a basic test map.

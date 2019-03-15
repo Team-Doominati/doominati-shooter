@@ -26,13 +26,16 @@ all: codedefs gamedefs gfx maps
 
 shooter_H = \
 	shooter/m_defs.h \
-	shooter/p_defs.h
+	shooter/p_defs.h \
+	shooter/r_defs.h
 
 shooter_IR = \
 	build/ir/shooter/m_main.ir \
 	build/ir/shooter/p_main.ir \
 	build/ir/shooter/p_map.ir \
-	build/ir/shooter/p_think.ir
+	build/ir/shooter/p_think.ir \
+	build/ir/shooter/r_main.ir \
+	build/ir/shooter/r_text.ir
 
 codedefs: build/data/boot/codedefs/libc.bin build/data/boot/codedefs/shooter.bin
 
@@ -74,7 +77,8 @@ shooter_gfx = \
 	build/data/gfx/GUI/7.png \
 	build/data/gfx/GUI/8.png \
 	build/data/gfx/GUI/9.png \
-	build/data/gfx/GUI/HP.png \
+	build/data/gfx/GUI/H.png \
+	build/data/gfx/GUI/P.png \
 	build/data/gfx/Tile/Open.png \
 	build/data/gfx/Tile/Wall.png
 

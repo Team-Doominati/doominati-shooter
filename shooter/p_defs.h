@@ -62,7 +62,7 @@ extern DGE_Team P_TeamPlayer;
 void P_Map_Init(int w, int h, char const *tiles, char const *mobjs);
 void P_Map_Quit();
 
-unsigned P_MissileCreate(unsigned owner);
+unsigned P_MissileCreate(unsigned owner, int damage);
 
 void P_Score_Add(unsigned score);
 void P_Score_Sub(unsigned score);

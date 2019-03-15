@@ -31,7 +31,7 @@ M_Callback("DrawPost") static void DrawHudCB(void)
 {
    if(!P_Player.id) return;
 
-   DGE_Draw_SetColor(0.0r, 1.0r, 0.0r);
+   DGE_Draw_SetColor(0.0ulr, 1.0ulr, 0.0ulr);
 
    DGE_Texture_Bind(R_AlphaTab['H' - 'A']);
    DGE_Draw_Rectangle( 0, 0, 20, 32);
@@ -44,7 +44,7 @@ M_Callback("DrawPost") static void DrawHudCB(void)
 
    R_DrawDigitsU(40, 0, 3, health);
 
-   DGE_Draw_SetColor(1.0r, 1.0r, 1.0r);
+   DGE_Draw_SetColor(1.0ulr, 1.0ulr, 1.0ulr);
    R_DrawDigitsU(M_ScreenW - 180, 0, 9, P_Score);
 }
 

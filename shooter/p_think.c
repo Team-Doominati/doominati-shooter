@@ -23,15 +23,19 @@
 //
 // P_MissileCreate
 //
-unsigned P_MissileCreate(unsigned owner_)
+unsigned P_MissileCreate(unsigned owner_, int damage)
 {
    DGE_Entity owner = {owner_};
    DGE_MissileEntity ent = {DGE_MissileEntity_Create(0)};
 
-   ent.damage = 25;
+   ent.damage = damage;
    ent.health = 10;
    ent.owner  = owner.id;
    ent.team   = owner.team;
+
+   ent.cr = owner.cr;
+   ent.cg = owner.cr;
+   ent.cb = owner.cg;
 
    ent.x = owner.x;
    ent.y = owner.y;
@@ -79,7 +83,7 @@ M_Entry void P_Think_Enemy(unsigned id)
 
       if(!(++count % 20) && (rand() & 1))
       {
-         DGE_MissileEntity missile = {P_MissileCreate(ent.id)};
+         DGE_MissileEntity missile = {P_MissileCreate(ent.id, 10)};
 
          missile.vx = ent.vx + x * 4;
          missile.vy = ent.vy + y * 4;
@@ -117,7 +121,7 @@ M_Entry void P_Think_Player(unsigned id)
       {
          float x, y;
 
-         DGE_MissileEntity missile = {P_MissileCreate(ent.id)};
+         DGE_MissileEntity missile = {P_MissileCreate(ent.id, 25)};
 
          sincosf(atan2f(cursor.y - M_ScreenH / 2, cursor.x - M_ScreenW / 2), &y, &x);
          missile.vx = ent.vx + x * 8;

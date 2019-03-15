@@ -66,9 +66,8 @@ build/data/boot/gamedefs: gamedefs.txt | build/data/boot
 ##
 
 shooter_gfx = \
-	build/data/gfx/Entity/Enemy.png \
 	build/data/gfx/Entity/Missile.png \
-	build/data/gfx/Entity/Player.png \
+	build/data/gfx/Entity/Mobj.png \
 	build/data/gfx/GUI/0.png \
 	build/data/gfx/GUI/1.png \
 	build/data/gfx/GUI/2.png \
@@ -100,7 +99,8 @@ $(shooter_gfx) : build/data/gfx/%.png : gfx/%.png | $(shooter_gfx_dir)
 ##
 
 shooter_maps = \
-	build/data/maps/map01
+	build/data/maps/map01 \
+	build/data/maps/map02
 
 maps: $(shooter_maps)
 

@@ -78,7 +78,7 @@ static unsigned P_EntityCreate(int x, int y)
 {
    DGE_Entity ent = {DGE_Entity_Create(0)};
 
-   ent.friction = 0.5r;
+   ent.friction = 0.5ulr;
    ent.mass     = 8;
    ent.gx       = 1;
    ent.gy       = 1;
@@ -105,10 +105,14 @@ static unsigned P_EntityCreate_Enemy(int x, int y)
 {
    DGE_Entity ent = {P_EntityCreate(x, y)};
 
+   ent.cr = 1.0ulr;
+   ent.cg = 0.0ulr;
+   ent.cb = 0.0ulr;
+
    ent.health = 40;
    ent.team   = P_TeamEnemy.id;
 
-   ent.sprite = DGE_Texture_Get(M_Str("@gfx/Entity/Enemy.png"));
+   ent.sprite = DGE_Texture_Get(M_Str("@gfx/Entity/Mobj.png"));
 
    DGE_PhysicsThinker_Block(ent.id);
 
@@ -124,10 +128,14 @@ static unsigned P_EntityCreate_Player(int x, int y)
 {
    DGE_Entity ent = {P_EntityCreate(x, y)};
 
+   ent.cr = 0.0ulr;
+   ent.cg = 1.0ulr;
+   ent.cb = 0.0ulr;
+
    ent.health = 100;
    ent.team   = P_TeamPlayer.id;
 
-   ent.sprite = DGE_Texture_Get(M_Str("@gfx/Entity/Player.png"));
+   ent.sprite = DGE_Texture_Get(M_Str("@gfx/Entity/Mobj.png"));
 
    DGE_PhysicsThinker_Block(ent.id);
 

@@ -34,6 +34,7 @@ shooter_IR = \
 	build/ir/shooter/m_main.ir \
 	build/ir/shooter/p_main.ir \
 	build/ir/shooter/p_map.ir \
+	build/ir/shooter/p_score.ir \
 	build/ir/shooter/p_think.ir \
 	build/ir/shooter/r_main.ir \
 	build/ir/shooter/r_text.ir

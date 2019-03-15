@@ -17,6 +17,13 @@
 
 
 //----------------------------------------------------------------------------|
+// Macros                                                                     |
+//
+
+#define P_ScoreMax 999999999
+
+
+//----------------------------------------------------------------------------|
 // Types                                                                      |
 //
 
@@ -40,6 +47,8 @@ typedef enum P_State
 
 extern DGE_Entity P_Player;
 
+extern unsigned P_Score;
+
 extern P_State P_StateCur;
 
 extern DGE_Team P_TeamEnemy;
@@ -54,6 +63,9 @@ void P_Map_Init(int w, int h, char const *tiles, char const *mobjs);
 void P_Map_Quit();
 
 unsigned P_MissileCreate(unsigned owner);
+
+void P_Score_Add(unsigned score);
+void P_Score_Sub(unsigned score);
 
 M_Entry void P_Think_Enemy(unsigned id);
 M_Entry void P_Think_Player(unsigned id);

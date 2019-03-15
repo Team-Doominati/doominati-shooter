@@ -223,11 +223,7 @@ void P_Map_Quit(void)
 //
 M_Shell int LoadMap(int sh)
 {
-   size_t argc = DGE_Shell_GetArgC(sh);
-   char **argv = malloc(sizeof(*argv) * argc + DGE_Shell_GetArgBufLen(sh));
-
-   DGE_Shell_GetArgBuf(sh, (char *)(argv + argc));
-   DGE_Shell_GetArgV(sh, argv, (char *)(argv + argc));
+   M_ShellInit();
 
    if(P_StateCur >= P_State_Live)
       P_Map_Quit();
@@ -294,8 +290,7 @@ M_Shell int LoadMap(int sh)
          printf("Failed to open map.\n");
    }
 
-   free(argv);
-
+   M_ShellFree();
    return 0;
 }
 

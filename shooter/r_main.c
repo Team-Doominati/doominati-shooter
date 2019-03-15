@@ -43,6 +43,9 @@ M_Callback("DrawPost") static void DrawHudCB(void)
    if(health > 999) health = 999;
 
    R_DrawDigitsU(40, 0, 3, health);
+
+   DGE_Draw_SetColor(1.0r, 1.0r, 1.0r);
+   R_DrawDigitsU(M_ScreenW - 180, 0, 9, P_Score);
 }
 
 

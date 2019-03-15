@@ -67,7 +67,10 @@ M_Entry void P_Think_Enemy(unsigned id)
    while(P_StateCur >= P_State_Live)
    {
       if(ent.health <= 0)
+      {
+         P_Score_Add(100);
          break;
+      }
 
       sincosf(atan2f(P_Player.y - ent.y, P_Player.x - ent.x), &y, &x);
 
@@ -100,7 +103,10 @@ M_Entry void P_Think_Player(unsigned id)
    while(P_StateCur >= P_State_Live)
    {
       if(ent.health <= 0)
+      {
+         P_Score_Sub(1000);
          break;
+      }
 
       unsigned btnAttack = DGE_Input_GetButton(0, M_Bind_Atk);
       unsigned btnAlt    = DGE_Input_GetButton(0, M_Bind_Alt);

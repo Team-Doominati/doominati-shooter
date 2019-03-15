@@ -8,6 +8,8 @@
 language eng
 {
    "LoadMap.desc" = "Loads a map by pathname.";
+
+   "Score.desc" = "Adds or subtracts score.";
 }
 
 ## EOF

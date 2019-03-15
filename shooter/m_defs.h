@@ -74,6 +74,26 @@
 #endif
 
 //
+// M_ShellFree
+//
+// Frees shell arguments.
+//
+#define M_ShellFree() \
+   free(argv)
+
+//
+// M_ShellInit
+//
+// Allocates and initializes shell arguments.
+//
+#define M_ShellInit() \
+   size_t argc = DGE_Shell_GetArgC(sh); \
+   char **argv = malloc(sizeof(*argv) * argc + DGE_Shell_GetArgBufLen(sh)); \
+   \
+   DGE_Shell_GetArgBuf(sh, (char *)(argv + argc)); \
+   DGE_Shell_GetArgV(sh, argv, (char *)(argv + argc))
+
+//
 // M_Str
 //
 // Makes a string literal into an indexed string literal.

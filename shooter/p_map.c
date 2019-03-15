@@ -14,6 +14,14 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
+
+//----------------------------------------------------------------------------|
+// Extern Objects                                                             |
+//
+
+P_Map P_MapCur;
 
 
 //----------------------------------------------------------------------------|
@@ -33,7 +41,7 @@ static unsigned P_TileCreate(int tx, int ty)
    DGE_Object_RefAdd(sec.id);
 
    sec.gz       = -1;
-   sec.friction =  0.5r;
+   sec.friction =  0.5ulr;
 
    DGE_Sector_PointSet(sec.id, 0, (DGE_Point2X){x - 32, y - 32});
    DGE_Sector_PointSet(sec.id, 1, (DGE_Point2X){x - 32, y + 32});
@@ -156,15 +164,21 @@ static unsigned P_EntityCreate_Player(int x, int y)
 //
 // P_Map_Init
 //
-void P_Map_Init(int w, int h, char const *tiles, char const *mobjs)
+void P_Map_Init(P_Map *map)
 {
    P_StateCur = P_State_Init;
+
+   int   w = map->w;
+   int   h = map->h;
+   char *tiles = map->data;
+   char *mobjs = map->data + w * h;
 
    for(int ty = 0; ty != h; ++ty) for(int tx = 0; tx != w; ++tx)
    {
       switch(tiles[ty * w + tx])
       {
-      case ' ': P_TileCreate_Open(tx, ty); break;
+      case ' ': break;
+      case 'O': P_TileCreate_Open(tx, ty); break;
       case 'W': P_TileCreate_Wall(tx, ty); break;
 
       default:
@@ -194,7 +208,7 @@ void P_Map_Init(int w, int h, char const *tiles, char const *mobjs)
 //
 // P_Map_Quit
 //
-void P_Map_Quit(void)
+void P_Map_Quit(P_Map *map)
 {
    P_StateCur = P_State_Quit;
 
@@ -223,7 +237,85 @@ void P_Map_Quit(void)
 
    P_Player.id = 0;
 
+   if(map->data)
+      free(map->data), map->data = NULL;
+
+   map->w = 0;
+   map->h = 0;
+
+   map->name[0] = '\0';
+
    P_StateCur = P_State_Stop;
+}
+
+//
+// P_Map_Read
+//
+void P_Map_Read(P_Map *map, FILE *in)
+{
+   while(P_Map_ReadHead(map, in)) {}
+
+   map->data = malloc(map->w * map->h * 2);
+
+   for(int i = 0, e = map->h * 2; i != e; ++i)
+      P_Map_ReadData(map, map->data + i * map->w, in);
+}
+
+//
+// P_Map_ReadData
+//
+void P_Map_ReadData(P_Map *map, char *data, FILE *in)
+{
+   int c;
+   char *end = data + map->w;
+   while(data != end)
+   {
+      if((c = fgetc(in)) == '\n' || c == EOF) break;
+      *data++ = c;
+   }
+
+   while(data != end)
+      *data++ = ' ';
+
+   while(c != '\n' && c != EOF)
+      c = fgetc(in);
+}
+
+//
+// P_Map_ReadHead
+//
+bool P_Map_ReadHead(P_Map *map, FILE *in)
+{
+   char head[8], *itr = head, *end = head + sizeof(head) - 1;
+
+   {
+      int c = fgetc(in);
+      if(c == '\n' || c == EOF)
+         return false;
+      ungetc(c, in);
+   }
+
+   fscanf(in, "%7s", head);
+
+   if(head[0] == '#')
+   {
+      // Ignore as comment.
+   }
+   else if(strcmp(head, "name") == 0)
+   {
+      fscanf(in, " %31s", map->name);
+   }
+   else if(strcmp(head, "size") == 0)
+   {
+      fscanf(in, " %i %i", &map->w, &map->h);
+   }
+   else
+      fprintf(stderr, "unknown map header: '%s'\n", head);
+
+   // Skip rest of line.
+   for(int c; (c = fgetc(in)) != '\n' && c != EOF;) {}
+
+   return true;
 }
 
 //
@@ -233,69 +325,35 @@ M_Shell int LoadMap(int sh)
 {
    M_ShellInit();
 
-   if(P_StateCur >= P_State_Live)
-      P_Map_Quit();
+   if(argc == 2)
+   {
+      if(P_StateCur >= P_State_Live)
+         P_Map_Quit(&P_MapCur);
 
-   if(argc <= 1)
-   {
-      printf("Loading fallback map...\n");
-      P_Map_Init(11, 11,
-         "WWWWWWWWWWW"
-         "W         W"
-         "W      W  W"
-         "W  WW  W  W"
-         "W      W  W"
-         "W      W  W"
-         "W      W  W"
-         "W  WW  W  W"
-         "W      W  W"
-         "W         W"
-         "WWWWWWWWWWW"
-         ,
-         "           "
-         "           "
-         "           "
-         "         E "
-         "           "
-         "     P   E "
-         "           "
-         "         E "
-         "           "
-         "           "
-         "           "
-      );
-   }
-   else
-   {
       printf("Loading map '%s'...\n", argv[1]);
-      FILE *map = fopen(argv[1], "r");
-      if(map)
+      FILE *in = fopen(argv[1], "r");
+      if(in)
       {
-         int c;
-         size_t w, h;
-         fscanf(map, "%zu %zu", &w, &h);
+         P_Map_Read(&P_MapCur, in);
 
-         for(c; (c = fgetc(map)) != '\n' && c != EOF;) {}
+         if(P_MapCur.name[0])
+            printf("Now entering %s\n", P_MapCur.name);
 
-         // Load tile and mobj data.
-         char *tiles = malloc(w * h * 2), *mobjs = tiles + w * h, *itr = tiles;
-         for(size_t i = w * h * 2; i;)
-            if((c = fgetc(map)) != '\n') *itr++ = c, --i;
-
-         for(c; (c = fgetc(map)) != '\n' && c != EOF;) {}
-
-         P_Map_Init(w, h, tiles, mobjs);
-         free(tiles);
+         P_Map_Init(&P_MapCur);
 
          // Print map message.
-         for(c; (c = fgetc(map)) != EOF;)
+         for(int c; (c = fgetc(in)) != EOF;)
             putchar(c);
          putchar('\n');
 
-         fclose(map);
+         fclose(in);
       }
       else
          printf("Failed to open map.\n");
+   }
+   else
+   {
+      fprintf(stderr, "Usage: LoadMap name\n");
    }
 
    M_ShellFree();

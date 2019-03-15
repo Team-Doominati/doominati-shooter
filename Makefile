@@ -99,6 +99,7 @@ $(shooter_gfx) : build/data/gfx/%.png : gfx/%.png | $(shooter_gfx_dir)
 ##
 
 shooter_maps = \
+	build/data/maps/colinpip \
 	build/data/maps/map01 \
 	build/data/maps/map02
 

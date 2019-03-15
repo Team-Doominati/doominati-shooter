@@ -15,6 +15,8 @@
 
 #include "m_defs.h"
 
+#include <stdio.h>
+
 
 //----------------------------------------------------------------------------|
 // Macros                                                                     |
@@ -40,10 +42,22 @@ typedef enum P_State
    P_State_Halt,
 } P_State;
 
+//
+// P_Map
+//
+typedef struct P_Map
+{
+   char *data;
+   int   w, h;
+   char  name[32];
+} P_Map;
+
 
 //----------------------------------------------------------------------------|
 // Extern Objects                                                             |
 //
+
+extern P_Map P_MapCur;
 
 extern DGE_Entity P_Player;
 
@@ -59,8 +73,12 @@ extern DGE_Team P_TeamPlayer;
 // Extern Functions                                                           |
 //
 
-void P_Map_Init(int w, int h, char const *tiles, char const *mobjs);
-void P_Map_Quit();
+void P_Map_Init(P_Map *map);
+void P_Map_Quit(P_Map *map);
+
+void P_Map_Read(P_Map *map, FILE *in);
+void P_Map_ReadData(P_Map *map, char *data, FILE *in);
+bool P_Map_ReadHead(P_Map *map, FILE *in);
 
 unsigned P_MissileCreate(unsigned owner, int damage);
 

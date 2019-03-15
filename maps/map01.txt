@@ -1,26 +1,28 @@
-16 12
+name E-Way
+size 16 12
+
 WWWWWWWWWWWWWWWW
-W              W
-W              W
-W       WWWWWWWW
-W       WWWWWWWW
-W              W
-W              W
-W       WWWWWWWW
-W       WWWWWWWW
-W              W
-W              W
+WOOOOOOOOOOOOOOW
+WOOOOOOOOOOOOOOW
+WOOOOOOOWWWWWWWW
+WOOOOOOOWWWWWWWW
+WOOOOOOOOOOOOOOW
+WOOOOOOOOOOOOOOW
+WOOOOOOOWWWWWWWW
+WOOOOOOOWWWWWWWW
+WOOOOOOOOOOOOOOW
+WOOOOOOOOOOOOOOW
 WWWWWWWWWWWWWWWW
-                
-                
-              P 
-                
-                
-        E     E 
-        E     E 
-                
-                
-        E     E 
-        E     E 
-                
+
+
+              P
+
+
+        E     E
+        E     E
+
+
+        E     E
+        E     E
+
 Just a basic test map.

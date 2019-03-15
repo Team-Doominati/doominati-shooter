@@ -12,12 +12,13 @@
 
 CC = gdcc-cc
 LD = gdcc-ld
+NTSC = gdcc-ntsc
 
 CFLAGS = --target-engine=Doominati --no-warn-unused-initializer
 LDFLAGS = --target-engine=Doominati
 
 
-all: codedefs gamedefs gfx maps
+all: codedefs gamedefs gfx maps textdefs
 
 
 ##
@@ -56,7 +57,7 @@ $(shooter_IR) : build/ir/shooter/%.ir : shooter/%.c $(shooter_H) | build/ir/shoo
 gamedefs: build/data/boot/gamedefs
 
 build/data/boot/gamedefs: gamedefs.txt | build/data/boot
-	gdcc-ntsc -o$@ $<
+	$(NTSC) --nts-type=GAMEDEFS -o$@ $<
 
 
 ##
@@ -107,6 +108,19 @@ $(shooter_maps) : build/data/maps/% : maps/%.txt | build/data/maps
 
 
 ##
+## Textdefs
+##
+
+shooter_NTS = \
+	build/data/boot/textdefs/shell.nts
+
+textdefs: $(shooter_NTS)
+
+$(shooter_NTS) : build/data/boot/textdefs/%.nts : text/%.txt | build/data/boot/textdefs
+	$(NTSC) --nts-type=TEXTDEFS -o$@ $<
+
+
+##
 ## Directories
 ##
 
@@ -129,6 +143,9 @@ build/data/gfx/Entity: | build/data/gfx
 	mkdir $@
 
 build/data/gfx: | build/data
+	mkdir $@
+
+build/data/boot/textdefs: | build/data/boot
 	mkdir $@
 
 build/data/boot/codedefs: | build/data/boot
@@ -154,6 +171,8 @@ clean:
 	rm -f  $(shooter_gfx)
 	rm -df $(shooter_gfx_dir)
 	rm -df build/data/gfx
+	rm -f  $(shooter_NTS)
+	rm -df build/data/boot/textdefs
 	rm -f  build/data/boot/gamedefs
 	rm -f  build/data/boot/codedefs/shooter.bin
 	rm -f  build/data/boot/codedefs/libc.bin

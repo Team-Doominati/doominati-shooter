@@ -12,6 +12,8 @@
 
 #include "p_defs.h"
 
+#include <stdlib.h>
+
 
 //----------------------------------------------------------------------------|
 // Extern Objects                                                             |
@@ -61,6 +63,21 @@ void P_Quit(void)
 //
 void P_Task(void)
 {
+   if(P_StateCur == P_State_Live && P_MapCur->next[0])
+   {
+      if(!P_MapCur->mobjC)
+      {
+         if(!P_MapCur->nextC--)
+         {
+            P_Map *old = P_MapCur;
+            P_Map_Quit(old);
+            P_Map_LoadName(malloc(sizeof(P_Map)), old->next);
+            free(old);
+         }
+      }
+      else
+         P_MapCur->nextC = 150;
+   }
 }
 
 // EOF

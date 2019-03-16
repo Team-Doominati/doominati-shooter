@@ -21,7 +21,7 @@
 // Extern Objects                                                             |
 //
 
-P_Map P_MapCur;
+P_Map *P_MapCur = NULL;
 
 
 //----------------------------------------------------------------------------|
@@ -50,6 +50,20 @@ static unsigned P_TileCreate(int tx, int ty)
 
    DGE_Sector_CalcBounds(sec.id);
    DGE_Sector_Block(sec.id);
+
+   return sec.id;
+}
+
+//
+// P_TileCreate_Half
+//
+static unsigned P_TileCreate_Half(int tx, int ty)
+{
+   DGE_Sector sec = {P_TileCreate(tx, ty)};
+
+   sec.zl   = 4;
+   sec.zu   = 64;
+   sec.texf = DGE_Texture_Get(M_Str("@gfx/Tile/Half.png"));
 
    return sec.id;
 }
@@ -126,6 +140,8 @@ static unsigned P_EntityCreate_Enemy(int x, int y)
 
    DGE_Task_Create(0, (DGE_CallbackType)P_Think_Enemy, ent.id);
 
+   ++P_MapCur->mobjC;
+
    return ent.id;
 }
 
@@ -167,17 +183,21 @@ static unsigned P_EntityCreate_Player(int x, int y)
 void P_Map_Init(P_Map *map)
 {
    P_StateCur = P_State_Init;
+   P_MapCur   = map;
 
    int   w = map->w;
    int   h = map->h;
    char *tiles = map->data;
    char *mobjs = map->data + w * h;
 
+   map->mobjC = 0;
+
    for(int ty = 0; ty != h; ++ty) for(int tx = 0; tx != w; ++tx)
    {
       switch(tiles[ty * w + tx])
       {
       case ' ': break;
+      case 'H': P_TileCreate_Half(tx, ty); break;
       case 'O': P_TileCreate_Open(tx, ty); break;
       case 'W': P_TileCreate_Wall(tx, ty); break;
 
@@ -203,6 +223,48 @@ void P_Map_Init(P_Map *map)
    DGE_BlockMap_Split(64, 1);
 
    P_StateCur = P_State_Live;
+}
+
+//
+// P_Map_LoadName
+//
+void P_Map_LoadName(P_Map *map, char const *name)
+{
+   size_t nameLen = strlen(name);
+   char  *path    = malloc(nameLen + 7);
+   memcpy(path+0, "/maps/", 6);
+   memcpy(path+6, name, nameLen);
+   path[nameLen + 6] = '\0';
+
+   P_Map_LoadPath(map, path);
+
+   free(path);
+}
+
+//
+// P_Map_LoadPath
+//
+void P_Map_LoadPath(P_Map *map, char const *path)
+{
+   FILE *in = fopen(path, "r");
+   if(in)
+   {
+      P_Map_Read(map, in);
+
+      if(map->name[0])
+         printf("Now entering %s\n", map->name);
+
+      P_Map_Init(map);
+
+      // Print map message.
+      for(int c; (c = fgetc(in)) != EOF;)
+         putchar(c);
+      putchar('\n');
+
+      fclose(in);
+   }
+   else
+      printf("Failed to open map: '%s'\n", path);
 }
 
 //
@@ -240,11 +302,6 @@ void P_Map_Quit(P_Map *map)
    if(map->data)
       free(map->data), map->data = NULL;
 
-   map->w = 0;
-   map->h = 0;
-
-   map->name[0] = '\0';
-
    P_StateCur = P_State_Stop;
 }
 
@@ -253,6 +310,12 @@ void P_Map_Quit(P_Map *map)
 //
 void P_Map_Read(P_Map *map, FILE *in)
 {
+   map->w = 0;
+   map->h = 0;
+   map->name[0] = '\0';
+   map->next[0] = '\0';
+   map->nextC   = 150;
+
    while(P_Map_ReadHead(map, in)) {}
 
    map->data = malloc(map->w * map->h * 2);
@@ -305,6 +368,10 @@ bool P_Map_ReadHead(P_Map *map, FILE *in)
    {
       fscanf(in, " %31s", map->name);
    }
+   else if(strcmp(head, "next") == 0)
+   {
+      fscanf(in, " %31s", map->next);
+   }
    else if(strcmp(head, "size") == 0)
    {
       fscanf(in, " %i %i", &map->w, &map->h);
@@ -321,43 +388,30 @@ bool P_Map_ReadHead(P_Map *map, FILE *in)
 //
 // LoadMap
 //
-M_Shell int LoadMap(int sh)
+M_ShellDefn(LoadMap)
 {
-   M_ShellInit();
-
    if(argc == 2)
    {
       if(P_StateCur >= P_State_Live)
-         P_Map_Quit(&P_MapCur);
+         P_Map_Quit(P_MapCur);
 
-      printf("Loading map '%s'...\n", argv[1]);
-      FILE *in = fopen(argv[1], "r");
-      if(in)
-      {
-         P_Map_Read(&P_MapCur, in);
+      printf("Loading map: '%s'\n", argv[1]);
 
-         if(P_MapCur.name[0])
-            printf("Now entering %s\n", P_MapCur.name);
+      if(!P_MapCur)
+         P_MapCur = malloc(sizeof(P_Map));
 
-         P_Map_Init(&P_MapCur);
-
-         // Print map message.
-         for(int c; (c = fgetc(in)) != EOF;)
-            putchar(c);
-         putchar('\n');
-
-         fclose(in);
-      }
+      if(argv[1][0] == '/')
+         P_Map_LoadPath(P_MapCur, argv[1]);
       else
-         printf("Failed to open map.\n");
+         P_Map_LoadName(P_MapCur, argv[1]);
+
+      return 0;
    }
    else
    {
       fprintf(stderr, "Usage: LoadMap name\n");
+      return 1;
    }
-
-   M_ShellFree();
-   return 0;
 }
 
 // EOF

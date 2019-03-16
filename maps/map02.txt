@@ -1,4 +1,5 @@
 name Daimap
+next map03
 size 18 15
 
 WWWWWWWWWWWWWWWWWW

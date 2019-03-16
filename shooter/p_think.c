@@ -68,10 +68,11 @@ M_Entry void P_Think_Enemy(unsigned id)
 
    unsigned count = 0;
 
-   while(P_StateCur >= P_State_Live)
+   for(; P_StateCur >= P_State_Live; DGE_Task_Sleep(0, 1))
    {
       if(ent.health <= 0)
       {
+         --P_MapCur->mobjC;
          P_Score_Add(100);
          break;
       }
@@ -88,8 +89,6 @@ M_Entry void P_Think_Enemy(unsigned id)
          missile.vx = ent.vx + x * 4;
          missile.vy = ent.vy + y * 4;
       }
-
-      DGE_Task_Sleep(0, 1);
    }
 
    DGE_Object_RefSub(ent.id);
@@ -104,7 +103,7 @@ M_Entry void P_Think_Player(unsigned id)
 
    DGE_Object_RefAdd(ent.id);
 
-   while(P_StateCur >= P_State_Live)
+   for(; P_StateCur >= P_State_Live; DGE_Task_Sleep(0, 1))
    {
       if(ent.health <= 0)
       {
@@ -132,8 +131,6 @@ M_Entry void P_Think_Player(unsigned id)
       if(DGE_Input_GetButton(0, M_Bind_Dn) & DGE_Button_Down) ent.vy = ent.vy + 2;
       if(DGE_Input_GetButton(0, M_Bind_Lt) & DGE_Button_Down) ent.vx = ent.vx - 2;
       if(DGE_Input_GetButton(0, M_Bind_Rt) & DGE_Button_Down) ent.vx = ent.vx + 2;
-
-      DGE_Task_Sleep(0, 1);
    }
 
    DGE_Object_RefSub(ent.id);

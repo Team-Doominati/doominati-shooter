@@ -106,10 +106,8 @@ void P_Score_Sub(unsigned score)
 //
 // Score
 //
-M_Shell int Score(int sh)
+M_ShellDefn(Score)
 {
-   M_ShellInit();
-
    if(argc == 2)
    {
       long score = strtol(argv[1], NULL, 10);
@@ -117,14 +115,15 @@ M_Shell int Score(int sh)
          P_Score_Sub(-score);
       else
          P_Score_Add(score);
+
+      return 0;
    }
    else
    {
       fprintf(stderr, "Usage: Score score\n");
-   }
 
-   M_ShellFree();
-   return 0;
+      return 1;
+   }
 }
 
 // EOF

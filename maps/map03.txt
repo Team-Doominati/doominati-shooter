@@ -1,0 +1,72 @@
+name DestructO
+size 34 34
+
+            WWWWWWWWWW
+         WWWWOOOOOOOOWWWW
+       WWWOOOOWWWWWWOOOOWWW
+      WWOOOHHHH    HHHHOOOWW
+     WWOOHHH          HHHOOWW
+    WWOOHH              HHOOWW
+   WWOOHH                HHOOWW
+  WWOOHH                  HHOOWW
+  WOOHH                    HHOOWW
+ WWOHH         HHHH         HHOWW
+ WOOH        HHHOOHHH        HOOW
+ WOHH       HHOOOOOOHH       HHOW
+WWOH       HHOOOOOOOOHH       HOWW
+WOOH      HHOOOWOOWOOOHH      HOOW
+WOWH      HOOOWWOOWWOOOH      HWOW
+WOW      HHOOWWWOOWWWOOHH      WOW
+WOW      HOOOOOOOOOOOOOOH      WOW
+WOW      HOOOOOOOOOOOOOOH      WOW
+WOW      HHOOWWWOOWWWOOHH      WOW
+WOWH      HOOOWWOOWWOOOH      HWOW
+WOOH      HHOOOWOOWOOOHH      HOOW
+WWOH       HHOOOOOOOOHH       HOWW
+ WOHH       HHOOOOOOHH       HHOW
+ WOOH        HHHOOHHH        HOOW
+ WWOHH         HOOH         HHOWW
+  WOOHH        HOOH        HHOOW
+  WWOOHH       HOOH       HHOOWW
+   WWOOHH      HOOH      HHOOWW
+    WWOOHH     HOOH     HHOOWW
+     WWOOHHH   HOOH   HHHOOWW
+      WWOOOHHHHWOOWHHHHOOOWW
+       WWWOOOOWWOOWWOOOOWWW
+         WWWWOOOOOOOOWWWW
+            WWWWWWWWWW
+
+                P
+
+
+
+
+
+
+
+
+
+
+
+ E                              E
+
+                EE
+               EEEE
+               EEEE
+                EE
+
+ E                              E
+
+
+  E                            E
+
+   E                          E
+    E                        E
+     E                      E
+      E                    E
+       E                  E
+        E                E
+          E            E
+             E      E
+
+O my...

@@ -1,4 +1,5 @@
 name E-Way
+next map02
 size 16 12
 
 WWWWWWWWWWWWWWWW
@@ -25,4 +26,4 @@ WWWWWWWWWWWWWWWW
         E     E
         E     E
 
-Just a basic test map.
+Entry point.

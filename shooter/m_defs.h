@@ -74,24 +74,26 @@
 #endif
 
 //
-// M_ShellFree
+// M_ShellDefn
 //
-// Frees shell arguments.
+// Defines a function as a shell command, with a arg-loading wrapper.
 //
-#define M_ShellFree() \
-   free(argv)
-
-//
-// M_ShellInit
-//
-// Allocates and initializes shell arguments.
-//
-#define M_ShellInit() \
-   size_t argc = DGE_Shell_GetArgC(sh); \
-   char **argv = malloc(sizeof(*argv) * argc + DGE_Shell_GetArgBufLen(sh)); \
-   \
-   DGE_Shell_GetArgBuf(sh, (char *)(argv + argc)); \
-   DGE_Shell_GetArgV(sh, argv, (char *)(argv + argc))
+#define M_ShellDefn(cmd) \
+   static int (cmd##_)(int sh, char **argv, size_t argc); \
+   M_Shell int (cmd)(int sh) \
+   { \
+      size_t argc = DGE_Shell_GetArgC(sh); \
+      char **argv = malloc(sizeof(*argv) * argc + DGE_Shell_GetArgBufLen(sh)); \
+      \
+      DGE_Shell_GetArgBuf(sh, (char *)(argv + argc)); \
+      DGE_Shell_GetArgV(sh, argv, (char *)(argv + argc)); \
+      \
+      int res = (cmd##_)(sh, argv, argc); \
+      \
+      free(argv); \
+      return res; \
+   } \
+   static int (cmd##_)(int sh, char **argv, size_t argc)
 
 //
 // M_Str

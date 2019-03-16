@@ -80,6 +80,7 @@ shooter_gfx = \
 	build/data/gfx/GUI/9.png \
 	build/data/gfx/GUI/H.png \
 	build/data/gfx/GUI/P.png \
+	build/data/gfx/Tile/Half.png \
 	build/data/gfx/Tile/Open.png \
 	build/data/gfx/Tile/Wall.png
 
@@ -101,7 +102,8 @@ $(shooter_gfx) : build/data/gfx/%.png : gfx/%.png | $(shooter_gfx_dir)
 shooter_maps = \
 	build/data/maps/colinpip \
 	build/data/maps/map01 \
-	build/data/maps/map02
+	build/data/maps/map02 \
+	build/data/maps/map03
 
 maps: $(shooter_maps)
 

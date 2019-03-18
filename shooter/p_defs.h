@@ -87,7 +87,7 @@ void P_Map_Read(P_Map *map, FILE *in);
 void P_Map_ReadData(P_Map *map, char *data, FILE *in);
 bool P_Map_ReadHead(P_Map *map, FILE *in);
 
-unsigned P_MissileCreate(unsigned owner, int damage);
+unsigned P_MissileCreate(unsigned owner, int damage, float angle, DGE_Fixed speed);
 
 void P_Score_Add(unsigned score);
 void P_Score_Sub(unsigned score);

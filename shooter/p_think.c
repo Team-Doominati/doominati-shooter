@@ -23,7 +23,7 @@
 //
 // P_MissileCreate
 //
-unsigned P_MissileCreate(unsigned owner_, int damage)
+unsigned P_MissileCreate(unsigned owner_, int damage, float angle, DGE_Fixed speed)
 {
    DGE_Entity owner = {owner_};
    DGE_MissileEntity ent = {DGE_MissileEntity_Create(0)};
@@ -48,6 +48,11 @@ unsigned P_MissileCreate(unsigned owner_, int damage)
    ent.rsx = 4;
    ent.rsy = 4;
 
+   float x, y;
+   sincosf(angle, &y, &x);
+   ent.vx = owner.vx + x * speed;
+   ent.vy = owner.vy + y * speed;
+
    ent.sprite = DGE_Texture_Get(M_Str("@gfx/Entity/Missile.png"));
 
    DGE_PhysicsThinker_Block(ent.id);
@@ -66,7 +71,7 @@ M_Entry void P_Think_Enemy(unsigned id)
 
    float x, y;
 
-   unsigned count = 0;
+   unsigned cooldown = 0;
 
    for(; P_StateCur >= P_State_Live; DGE_Task_Sleep(0, 1))
    {
@@ -77,18 +82,20 @@ M_Entry void P_Think_Enemy(unsigned id)
          break;
       }
 
-      sincosf(atan2f(P_Player.y - ent.y, P_Player.x - ent.x), &y, &x);
+      float angle = atan2f(P_Player.y - ent.y, P_Player.x - ent.x);
+      sincosf(angle, &y, &x);
 
       ent.vx = ent.vx + x;
       ent.vy = ent.vy + y;
 
-      if(!(++count % 20) && (rand() & 1))
+      if(!cooldown && rand() < RAND_MAX / 16)
       {
-         DGE_MissileEntity missile = {P_MissileCreate(ent.id, 10)};
-
-         missile.vx = ent.vx + x * 4;
-         missile.vy = ent.vy + y * 4;
+         float error = rand() / ((float)RAND_MAX * 32) - 1/64.0f;
+         P_MissileCreate(ent.id, 10, angle + error, 4);
+         cooldown = 26;
       }
+
+      if(cooldown) --cooldown;
    }
 
    DGE_Object_RefSub(ent.id);
@@ -103,6 +110,10 @@ M_Entry void P_Think_Player(unsigned id)
 
    DGE_Object_RefAdd(ent.id);
 
+   unsigned cooldown = 0;
+
+   float x, y;
+
    for(; P_StateCur >= P_State_Live; DGE_Task_Sleep(0, 1))
    {
       if(ent.health <= 0)
@@ -111,21 +122,29 @@ M_Entry void P_Think_Player(unsigned id)
          break;
       }
 
-      unsigned btnAttack = DGE_Input_GetButton(0, M_Bind_Atk);
-      unsigned btnAlt    = DGE_Input_GetButton(0, M_Bind_Alt);
+      unsigned btnAtk = DGE_Input_GetButton(0, M_Bind_Atk);
+      unsigned btnAlt = DGE_Input_GetButton(0, M_Bind_Alt);
 
       DGE_Point2I cursor = DGE_Input_GetCursor(0);
 
-      if(btnAttack == DGE_Button_Press || btnAlt == DGE_Button_Press)
+      if(!cooldown && (btnAtk & DGE_Button_Down))
       {
-         float x, y;
+         float error = rand() / ((float)RAND_MAX * 8) - 1/16.0f;
+         float angle = atan2f(cursor.y - M_ScreenH / 2, cursor.x - M_ScreenW / 2);
+         P_MissileCreate(ent.id, 10, angle + error, 12);
 
-         DGE_MissileEntity missile = {P_MissileCreate(ent.id, 25)};
-
-         sincosf(atan2f(cursor.y - M_ScreenH / 2, cursor.x - M_ScreenW / 2), &y, &x);
-         missile.vx = ent.vx + x * 8;
-         missile.vy = ent.vy + y * 8;
+         cooldown = 6;
       }
+
+      if(!cooldown && (btnAlt & DGE_Button_Down))
+      {
+         float angle = atan2f(cursor.y - M_ScreenH / 2, cursor.x - M_ScreenW / 2);
+         P_MissileCreate(ent.id, 40, angle, 8);
+
+         cooldown = 26;
+      }
+
+      if(cooldown) --cooldown;
 
       if(DGE_Input_GetButton(0, M_Bind_Up) & DGE_Button_Down) ent.vy = ent.vy - 2;
       if(DGE_Input_GetButton(0, M_Bind_Dn) & DGE_Button_Down) ent.vy = ent.vy + 2;

@@ -52,6 +52,13 @@ M_Callback("DrawPost") static void DrawHudCB(void)
 
    DGE_Draw_SetColor(1.0ulr, 1.0ulr, 1.0ulr);
    R_DrawDigitsU(M_ScreenW - 180, 0, 9, P_Score);
+
+   // Draw enemy count.
+
+   size_t mobjC = P_MapCur->mobjC;
+   DGE_Draw_SetColor(1.0ulr, 0.0ulr, 0.0ulr);
+   if(mobjC > 9999) mobjC = 9999;
+   R_DrawDigitsU(M_ScreenW - 80, 32, 4, mobjC);
 }
 
 

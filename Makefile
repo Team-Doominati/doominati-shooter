@@ -104,7 +104,8 @@ shooter_maps = \
 	build/data/maps/colinpip \
 	build/data/maps/map01 \
 	build/data/maps/map02 \
-	build/data/maps/map03
+	build/data/maps/map03 \
+	build/data/maps/map04
 
 maps: $(shooter_maps)
 

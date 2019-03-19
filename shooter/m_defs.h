@@ -19,6 +19,7 @@
 #include <stddef.h>
 
 #if __GDCC__
+#include <stdfix.h>
 #include <Doominati.h>
 #else
 #include "/usr/share/gdcc/lib/inc/C/Doominati.h"

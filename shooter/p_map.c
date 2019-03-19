@@ -40,8 +40,7 @@ static unsigned P_TileCreate(int tx, int ty)
 
    DGE_Object_RefAdd(sec.id);
 
-   sec.gz       = -1;
-   sec.friction =  0.5ulr;
+   sec.gz = -1;
 
    DGE_Sector_PointSet(sec.id, 0, (DGE_Point2X){x - P_TileSize / 2, y - P_TileSize / 2});
    DGE_Sector_PointSet(sec.id, 1, (DGE_Point2X){x - P_TileSize / 2, y + P_TileSize / 2});
@@ -61,6 +60,8 @@ static unsigned P_TileCreate_Half(int tx, int ty)
 {
    DGE_Sector sec = {P_TileCreate(tx, ty)};
 
+   sec.friction = 0.0625ulr;
+
    sec.zl   = 4;
    sec.zu   = P_TileSize;
    sec.texf = DGE_Texture_Get(M_Str("@gfx/Tile/Half.png"));
@@ -75,6 +76,8 @@ static unsigned P_TileCreate_Open(int tx, int ty)
 {
    DGE_Sector sec = {P_TileCreate(tx, ty)};
 
+   sec.friction = 0.015625ulr;
+
    sec.zu   = P_TileSize;
    sec.texf = DGE_Texture_Get(M_Str("@gfx/Tile/Open.png"));
 
@@ -87,6 +90,8 @@ static unsigned P_TileCreate_Open(int tx, int ty)
 static unsigned P_TileCreate_Wall(int tx, int ty)
 {
    DGE_Sector sec = {P_TileCreate(tx, ty)};
+
+   sec.friction = 0.25ulr;
 
    sec.texf = DGE_Texture_Get(M_Str("@gfx/Tile/Wall.png"));
 

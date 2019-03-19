@@ -47,8 +47,11 @@ M_Entry void P_Think_Enemy(unsigned id)
       float angle = atan2f(P_Player.y - ent.y, P_Player.x - ent.x);
       sincosf(angle, &y, &x);
 
-      ent.vx = ent.vx + x;
-      ent.vy = ent.vy + y;
+      if(abshk(ent.vx) + abshk(ent.vy) < 12)
+      {
+         ent.vx = ent.vx + (short accum)x * 0.5hk;
+         ent.vy = ent.vy + (short accum)y * 0.5hk;
+      }
 
       if(!cooldown && rand() < RAND_MAX / 16)
       {
@@ -108,10 +111,10 @@ M_Entry void P_Think_Player(unsigned id)
 
       if(cooldown) --cooldown;
 
-      if(DGE_Input_GetButton(0, M_Bind_Up) & DGE_Button_Down) ent.vy = ent.vy - 2;
-      if(DGE_Input_GetButton(0, M_Bind_Dn) & DGE_Button_Down) ent.vy = ent.vy + 2;
-      if(DGE_Input_GetButton(0, M_Bind_Lt) & DGE_Button_Down) ent.vx = ent.vx - 2;
-      if(DGE_Input_GetButton(0, M_Bind_Rt) & DGE_Button_Down) ent.vx = ent.vx + 2;
+      if(DGE_Input_GetButton(0, M_Bind_Up) & DGE_Button_Down) ent.vy = ent.vy - 0.5hk;
+      if(DGE_Input_GetButton(0, M_Bind_Dn) & DGE_Button_Down) ent.vy = ent.vy + 0.5hk;
+      if(DGE_Input_GetButton(0, M_Bind_Lt) & DGE_Button_Down) ent.vx = ent.vx - 0.5hk;
+      if(DGE_Input_GetButton(0, M_Bind_Rt) & DGE_Button_Down) ent.vx = ent.vx + 0.5hk;
    }
 
    DGE_Object_RefSub(ent.id);

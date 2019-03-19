@@ -33,6 +33,9 @@ static unsigned P_SpawnBase(int x, int y)
    ent.gy       = 1;
    ent.gz       = 1;
 
+   ent.bvx = 8;
+   ent.bvy = 8;
+
    ent.x = x;
    ent.y = y;
    ent.z = 16;

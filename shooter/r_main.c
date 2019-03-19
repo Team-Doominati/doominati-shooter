@@ -29,20 +29,26 @@ unsigned R_CharTab[36];
 //
 M_Callback("DrawPost") static void DrawHudCB(void)
 {
-   if(!P_Player.id) return;
+   if(P_StateCur < P_State_Live) return;
 
-   DGE_Draw_SetColor(0.0ulr, 1.0ulr, 0.0ulr);
+   // Draw health.
+
+   int health = P_Player.id ? P_Player.health : 0;
+   if(health <   0) health =   0;
+   if(health > 999) health = 999;
+
+   DGE_Draw_SetColor(
+      health <= 50 ? 1.0ulr : health < 100 ? 1.0hk - (health - 50) / 50.0hk : 0.0ulr,
+      health < 50 ? health / 50.0hk : 1.0ulr, 0.0ulr);
 
    DGE_Texture_Bind(R_AlphaTab['H' - 'A']);
    DGE_Draw_Rectangle( 0, 0, 20, 32);
    DGE_Texture_Bind(R_AlphaTab['P' - 'A']);
    DGE_Draw_Rectangle(20, 0, 40, 32);
 
-   int health = P_Player.health;
-   if(health <   0) health =   0;
-   if(health > 999) health = 999;
-
    R_DrawDigitsU(40, 0, 3, health);
+
+   // Draw score.
 
    DGE_Draw_SetColor(1.0ulr, 1.0ulr, 1.0ulr);
    R_DrawDigitsU(M_ScreenW - 180, 0, 9, P_Score);

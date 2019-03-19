@@ -63,20 +63,32 @@ void P_Quit(void)
 //
 void P_Task(void)
 {
-   if(P_StateCur == P_State_Live && P_MapCur->next[0])
+   if(P_StateCur == P_State_Live)
    {
-      if(!P_MapCur->mobjC)
+      if(!P_Player.id)
       {
-         if(!P_MapCur->nextC--)
+         if(!P_MapCur->respT)
+            P_SpawnPlayerStart();
+         else
+            --P_MapCur->respT;
+      }
+      else
+         P_MapCur->respT = P_Map_RespDelay;
+
+      if(!P_MapCur->mobjC && P_MapCur->next[0])
+      {
+         if(!P_MapCur->nextT)
          {
             P_Map *old = P_MapCur;
             P_Map_Quit(old);
             P_Map_LoadName(malloc(sizeof(P_Map)), old->next);
             free(old);
          }
+         else
+            --P_MapCur->nextT;
       }
       else
-         P_MapCur->nextC = 150;
+         P_MapCur->nextT = P_Map_NextDelay;
    }
 }
 

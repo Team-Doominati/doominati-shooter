@@ -33,8 +33,8 @@ P_Map *P_MapCur = NULL;
 //
 static unsigned P_TileCreate(int tx, int ty)
 {
-   DGE_Fixed x = tx * 64.0hk;
-   DGE_Fixed y = ty * 64.0hk;
+   DGE_Fixed x = tx * P_TileSize;
+   DGE_Fixed y = ty * P_TileSize;
 
    DGE_Sector sec = {DGE_Sector_Create(4, 0)};
 
@@ -43,10 +43,10 @@ static unsigned P_TileCreate(int tx, int ty)
    sec.gz       = -1;
    sec.friction =  0.5ulr;
 
-   DGE_Sector_PointSet(sec.id, 0, (DGE_Point2X){x - 32, y - 32});
-   DGE_Sector_PointSet(sec.id, 1, (DGE_Point2X){x - 32, y + 32});
-   DGE_Sector_PointSet(sec.id, 2, (DGE_Point2X){x + 32, y + 32});
-   DGE_Sector_PointSet(sec.id, 3, (DGE_Point2X){x + 32, y - 32});
+   DGE_Sector_PointSet(sec.id, 0, (DGE_Point2X){x - P_TileSize / 2, y - P_TileSize / 2});
+   DGE_Sector_PointSet(sec.id, 1, (DGE_Point2X){x - P_TileSize / 2, y + P_TileSize / 2});
+   DGE_Sector_PointSet(sec.id, 2, (DGE_Point2X){x + P_TileSize / 2, y + P_TileSize / 2});
+   DGE_Sector_PointSet(sec.id, 3, (DGE_Point2X){x + P_TileSize / 2, y - P_TileSize / 2});
 
    DGE_Sector_CalcBounds(sec.id);
    DGE_Sector_Block(sec.id);
@@ -62,7 +62,7 @@ static unsigned P_TileCreate_Half(int tx, int ty)
    DGE_Sector sec = {P_TileCreate(tx, ty)};
 
    sec.zl   = 4;
-   sec.zu   = 64;
+   sec.zu   = P_TileSize;
    sec.texf = DGE_Texture_Get(M_Str("@gfx/Tile/Half.png"));
 
    return sec.id;
@@ -75,7 +75,7 @@ static unsigned P_TileCreate_Open(int tx, int ty)
 {
    DGE_Sector sec = {P_TileCreate(tx, ty)};
 
-   sec.zu   = 64;
+   sec.zu   = P_TileSize;
    sec.texf = DGE_Texture_Get(M_Str("@gfx/Tile/Open.png"));
 
    return sec.id;
@@ -91,85 +91,6 @@ static unsigned P_TileCreate_Wall(int tx, int ty)
    sec.texf = DGE_Texture_Get(M_Str("@gfx/Tile/Wall.png"));
 
    return sec.id;
-}
-
-//
-// P_EntityCreate
-//
-static unsigned P_EntityCreate(int x, int y)
-{
-   DGE_Entity ent = {DGE_Entity_Create(0)};
-
-   ent.friction = 0.5ulr;
-   ent.mass     = 8;
-   ent.gx       = 1;
-   ent.gy       = 1;
-   ent.gz       = 1;
-
-   ent.x = x;
-   ent.y = y;
-   ent.z = 16;
-
-   ent.sx = 16;
-   ent.sy = 16;
-   ent.sz = 16;
-
-   ent.rsx = 16;
-   ent.rsy = 16;
-
-   return ent.id;
-}
-
-//
-// P_EntityCreate_Enemy
-//
-static unsigned P_EntityCreate_Enemy(int x, int y)
-{
-   DGE_Entity ent = {P_EntityCreate(x, y)};
-
-   ent.cr = 1.0ulr;
-   ent.cg = 0.0ulr;
-   ent.cb = 0.0ulr;
-
-   ent.health = 40;
-   ent.team   = P_TeamEnemy.id;
-
-   ent.sprite = DGE_Texture_Get(M_Str("@gfx/Entity/Mobj.png"));
-
-   DGE_PhysicsThinker_Block(ent.id);
-
-   DGE_Task_Create(0, (DGE_CallbackType)P_Think_Enemy, ent.id);
-
-   ++P_MapCur->mobjC;
-
-   return ent.id;
-}
-
-//
-// P_EntityCreate_Player
-//
-static unsigned P_EntityCreate_Player(int x, int y)
-{
-   DGE_Entity ent = {P_EntityCreate(x, y)};
-
-   ent.cr = 0.0ulr;
-   ent.cg = 1.0ulr;
-   ent.cb = 0.0ulr;
-
-   ent.health = 100;
-   ent.team   = P_TeamPlayer.id;
-
-   ent.sprite = DGE_Texture_Get(M_Str("@gfx/Entity/Mobj.png"));
-
-   DGE_PhysicsThinker_Block(ent.id);
-
-   DGE_Task_Create(0, (DGE_CallbackType)P_Think_Player, ent.id);
-
-   DGE_Renderer_SetViewpoint(ent.id);
-
-   P_Player.id = ent.id;
-
-   return ent.id;
 }
 
 
@@ -210,8 +131,8 @@ void P_Map_Init(P_Map *map)
       switch(mobjs[ty * w + tx])
       {
       case ' ': break;
-      case 'E': P_EntityCreate_Enemy (tx * 64, ty * 64); break;
-      case 'P': P_EntityCreate_Player(tx * 64, ty * 64); break;
+      case 'E': P_SpawnEnemy(tx * P_TileSize, ty * P_TileSize); break;
+      case 'P': break; // Spawn player later.
 
       default:
          printf("Unknown mobj '%c' (%02X) at (%u, %u)\n",
@@ -220,7 +141,9 @@ void P_Map_Init(P_Map *map)
       }
    }
 
-   DGE_BlockMap_Split(64, 1);
+   P_SpawnPlayerStart();
+
+   DGE_BlockMap_Split(P_TileSize, 1);
 
    P_StateCur = P_State_Live;
 }
@@ -314,7 +237,8 @@ void P_Map_Read(P_Map *map, FILE *in)
    map->h = 0;
    map->name[0] = '\0';
    map->next[0] = '\0';
-   map->nextC   = 150;
+   map->nextT   = P_Map_NextDelay;
+   map->respT   = P_Map_RespDelay;
 
    while(P_Map_ReadHead(map, in)) {}
 

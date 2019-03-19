@@ -22,7 +22,12 @@
 // Macros                                                                     |
 //
 
+#define P_Map_NextDelay 150
+#define P_Map_RespDelay 100
+
 #define P_ScoreMax 999999999
+
+#define P_TileSize 64
 
 
 //----------------------------------------------------------------------------|
@@ -49,7 +54,8 @@ typedef struct P_Map
 {
    char  *data;
    size_t mobjC;
-   size_t nextC;
+   size_t nextT;
+   size_t respT;
    int    w, h;
    char   name[32];
    char   next[32];
@@ -87,10 +93,15 @@ void P_Map_Read(P_Map *map, FILE *in);
 void P_Map_ReadData(P_Map *map, char *data, FILE *in);
 bool P_Map_ReadHead(P_Map *map, FILE *in);
 
-unsigned P_MissileCreate(unsigned owner, int damage, float angle, DGE_Fixed speed);
-
 void P_Score_Add(unsigned score);
 void P_Score_Sub(unsigned score);
+
+unsigned P_SpawnEnemy(int x, int y);
+
+unsigned P_SpawnMissile(unsigned owner, int damage, float angle, DGE_Fixed speed);
+
+unsigned P_SpawnPlayer(int x, int y);
+unsigned P_SpawnPlayerStart(void);
 
 M_Entry void P_Think_Enemy(unsigned id);
 M_Entry void P_Think_Player(unsigned id);

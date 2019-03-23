@@ -75,7 +75,7 @@ void P_Task(void)
       else
          P_MapCur->respT = P_Map_RespDelay;
 
-      if(!P_MapCur->mobjC && P_MapCur->next[0])
+      if(P_Map_InExit(P_MapCur) && P_MapCur->next[0])
       {
          if(!P_MapCur->nextT)
          {
@@ -87,8 +87,8 @@ void P_Task(void)
          else
             --P_MapCur->nextT;
       }
-      else
-         P_MapCur->nextT = P_Map_NextDelay;
+      else if(P_MapCur->nextT < P_Map_NextDelay)
+         ++P_MapCur->nextT;
    }
 }
 

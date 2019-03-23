@@ -36,9 +36,11 @@ static unsigned P_TileCreate(int tx, int ty)
    DGE_Fixed x = tx * P_TileSize;
    DGE_Fixed y = ty * P_TileSize;
 
-   DGE_Sector sec = {DGE_Sector_Create(4, 0)};
+   P_Tile sec = {DGE_Sector_Create(4, 1)};
 
    DGE_Object_RefAdd(sec.id);
+
+   sec.type = 0;
 
    sec.gz = -1;
 
@@ -54,11 +56,30 @@ static unsigned P_TileCreate(int tx, int ty)
 }
 
 //
+// P_TileCreate_Exit
+//
+static unsigned P_TileCreate_Exit(int tx, int ty)
+{
+   P_Tile sec = {P_TileCreate(tx, ty)};
+
+   sec.type = 'E';
+
+   sec.friction = 0.015625ulr;
+
+   sec.zu   = P_TileSize;
+   sec.texf = DGE_Texture_Get(M_Str("@gfx/Tile/Exit.png"));
+
+   ++P_MapCur->exitC;
+
+   return sec.id;
+}
+
+//
 // P_TileCreate_Half
 //
 static unsigned P_TileCreate_Half(int tx, int ty)
 {
-   DGE_Sector sec = {P_TileCreate(tx, ty)};
+   P_Tile sec = {P_TileCreate(tx, ty)};
 
    sec.friction = 0.0625ulr;
 
@@ -74,7 +95,7 @@ static unsigned P_TileCreate_Half(int tx, int ty)
 //
 static unsigned P_TileCreate_Open(int tx, int ty)
 {
-   DGE_Sector sec = {P_TileCreate(tx, ty)};
+   P_Tile sec = {P_TileCreate(tx, ty)};
 
    sec.friction = 0.015625ulr;
 
@@ -89,7 +110,7 @@ static unsigned P_TileCreate_Open(int tx, int ty)
 //
 static unsigned P_TileCreate_Wall(int tx, int ty)
 {
-   DGE_Sector sec = {P_TileCreate(tx, ty)};
+   P_Tile sec = {P_TileCreate(tx, ty)};
 
    sec.friction = 0.25ulr;
 
@@ -104,6 +125,40 @@ static unsigned P_TileCreate_Wall(int tx, int ty)
 //
 
 //
+// P_Map_InExit
+//
+bool P_Map_InExit(P_Map *map)
+{
+   if(!map->exitC || !P_Player.id) return false;
+
+   bool     found = false;
+   unsigned find  = DGE_BlockMap_Find(
+      P_Player.x - P_Player.sx, P_Player.y - P_Player.sy,
+      P_Player.x + P_Player.sx, P_Player.y + P_Player.sy);
+
+   // Look for an exit tile.
+   unsigned secC = DGE_BlockMap_FindCountSector(find);
+   for(unsigned i = 0; i != secC; ++i)
+   {
+      P_Tile sec = {DGE_BlockMap_FindGetSector(find, i)};
+
+      if(sec.type != 'E')
+         continue;
+
+      if(sec.xl > P_Player.x || P_Player.x > sec.xu ||
+         sec.yl > P_Player.y || P_Player.y > sec.yu)
+         continue;
+
+      found = true;
+      break;
+   }
+
+   DGE_BlockMap_FindFree(find);
+
+   return found;
+}
+
+//
 // P_Map_Init
 //
 void P_Map_Init(P_Map *map)
@@ -116,6 +171,7 @@ void P_Map_Init(P_Map *map)
    char *tiles = map->data;
    char *mobjs = map->data + w * h;
 
+   map->exitC = 0;
    map->mobjC = 0;
 
    for(int ty = 0; ty != h; ++ty) for(int tx = 0; tx != w; ++tx)
@@ -123,6 +179,7 @@ void P_Map_Init(P_Map *map)
       switch(tiles[ty * w + tx])
       {
       case ' ': break;
+      case 'E': P_TileCreate_Exit(tx, ty); break;
       case 'H': P_TileCreate_Half(tx, ty); break;
       case 'O': P_TileCreate_Open(tx, ty); break;
       case 'W': P_TileCreate_Wall(tx, ty); break;
@@ -225,6 +282,8 @@ void P_Map_Quit(P_Map *map)
       DGE_Thinker_Unlink(th);
    }
 
+   DGE_BlockMap_FindFree(find);
+
    P_Player.id = 0;
 
    if(map->data)
@@ -238,12 +297,14 @@ void P_Map_Quit(P_Map *map)
 //
 void P_Map_Read(P_Map *map, FILE *in)
 {
+   map->nextT = P_Map_NextDelay;
+   map->respT = P_Map_RespDelay;
+
    map->w = 0;
    map->h = 0;
+
    map->name[0] = '\0';
    map->next[0] = '\0';
-   map->nextT   = P_Map_NextDelay;
-   map->respT   = P_Map_RespDelay;
 
    while(P_Map_ReadHead(map, in)) {}
 

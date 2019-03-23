@@ -53,6 +53,7 @@ typedef enum P_State
 typedef struct P_Map
 {
    char  *data;
+   size_t exitC;
    size_t mobjC;
    size_t nextT;
    size_t respT;
@@ -60,6 +61,18 @@ typedef struct P_Map
    char   name[32];
    char   next[32];
 } P_Map;
+
+//
+// P_Tile
+//
+typedef struct P_Tile
+{
+   DGE_Unsig id;
+
+   DGE_SectorProps()
+
+   DGE_PropMem(DGE_Unsig, type, DGE_OME_Sector)
+} P_Tile;
 
 
 //----------------------------------------------------------------------------|
@@ -81,6 +94,8 @@ extern DGE_Team P_TeamPlayer;
 //----------------------------------------------------------------------------|
 // Extern Functions                                                           |
 //
+
+bool P_Map_InExit(P_Map *map);
 
 void P_Map_Init(P_Map *map);
 

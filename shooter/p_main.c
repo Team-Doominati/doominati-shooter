@@ -65,6 +65,8 @@ void P_Task(void)
 {
    if(P_StateCur == P_State_Live)
    {
+      DGE_Thinker_ThinkAll();
+
       if(!P_Player.id)
       {
          if(!P_MapCur->respT)

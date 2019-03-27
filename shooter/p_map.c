@@ -85,7 +85,8 @@ static unsigned P_TileCreate_Half(int tx, int ty)
 
    sec.zl   = 4;
    sec.zu   = P_TileSize;
-   sec.texf = DGE_Texture_Get(M_Str("@gfx/Tile/Half.png"));
+   sec.texc = DGE_Texture_Get(M_Str("@gfx/Tile/Half.png"));
+   sec.texf = DGE_Texture_Get(M_Str("@gfx/Tile/Open.png"));
 
    return sec.id;
 }

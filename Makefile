@@ -108,7 +108,9 @@ shooter_maps = \
 	build/data/maps/map01 \
 	build/data/maps/map02 \
 	build/data/maps/map03 \
-	build/data/maps/map04
+	build/data/maps/map04 \
+	build/data/maps/map05 \
+	build/data/maps/map06
 
 maps: $(shooter_maps)
 

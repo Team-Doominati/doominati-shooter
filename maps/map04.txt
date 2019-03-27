@@ -1,4 +1,5 @@
 name Arena
+next map05
 size 32 32
 
 WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW

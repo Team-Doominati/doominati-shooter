@@ -1,4 +1,5 @@
 name CRIMEBOX
+next map06
 size 35 23
 
 WWWWWWWWWWWWWWWW

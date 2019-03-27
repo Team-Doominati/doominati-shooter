@@ -377,6 +377,26 @@ bool P_Map_ReadHead(P_Map *map, FILE *in)
 }
 
 //
+// KillAll
+//
+M_ShellDefn(KillAll)
+{
+   unsigned find = DGE_BlockMap_FindAll();
+
+   unsigned thC = DGE_BlockMap_FindCountThinker(find);
+   for(unsigned i = 0; i != thC; ++i)
+   {
+      DGE_Entity ent = {DGE_Object_Cast(DGE_BlockMap_FindGetThinker(find, i), DGE_OT_Entity)};
+      if(!ent.id || ent.id == P_Player.id) continue;
+      ent.health = 0;
+   }
+
+   DGE_BlockMap_FindFree(find);
+
+   return 0;
+}
+
+//
 // LoadMap
 //
 M_ShellDefn(LoadMap)

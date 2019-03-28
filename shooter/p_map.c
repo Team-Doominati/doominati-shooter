@@ -12,6 +12,8 @@
 
 #include "p_defs.h"
 
+#include "r_defs.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -67,7 +69,7 @@ static unsigned P_TileCreate_Exit(int tx, int ty)
    sec.friction = 0.015625ulr;
 
    sec.zu   = P_TileSize;
-   sec.texf = DGE_Texture_Get(M_Str("@gfx/Tile/Exit.png"));
+   sec.texf = R_TexTile_Exit;
 
    ++P_MapCur->exitC;
 
@@ -85,8 +87,8 @@ static unsigned P_TileCreate_Half(int tx, int ty)
 
    sec.zl   = 4;
    sec.zu   = P_TileSize;
-   sec.texc = DGE_Texture_Get(M_Str("@gfx/Tile/Half.png"));
-   sec.texf = DGE_Texture_Get(M_Str("@gfx/Tile/Open.png"));
+   sec.texc = R_TexTile_Half;
+   sec.texf = R_TexTile_Open;
 
    return sec.id;
 }
@@ -101,7 +103,7 @@ static unsigned P_TileCreate_Open(int tx, int ty)
    sec.friction = 0.015625ulr;
 
    sec.zu   = P_TileSize;
-   sec.texf = DGE_Texture_Get(M_Str("@gfx/Tile/Open.png"));
+   sec.texf = R_TexTile_Open;
 
    return sec.id;
 }
@@ -115,7 +117,7 @@ static unsigned P_TileCreate_Wall(int tx, int ty)
 
    sec.friction = 0.25ulr;
 
-   sec.texf = DGE_Texture_Get(M_Str("@gfx/Tile/Wall.png"));
+   sec.texf = R_TexTile_Wall;
 
    return sec.id;
 }
@@ -405,6 +407,9 @@ M_ShellDefn(LoadMap)
    {
       if(P_StateCur >= P_State_Live)
          P_Map_Quit(P_MapCur);
+
+      if(P_StateCur == P_State_Edit)
+         P_EditQuit();
 
       printf("Loading map: '%s'\n", argv[1]);
 

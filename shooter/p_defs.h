@@ -42,6 +42,8 @@ typedef enum P_State
    P_State_Stop,
    P_State_Quit,
 
+   P_State_Edit,
+
    P_State_Live,
    P_State_Init,
    P_State_Halt,
@@ -94,6 +96,10 @@ extern DGE_Team P_TeamPlayer;
 //----------------------------------------------------------------------------|
 // Extern Functions                                                           |
 //
+
+void P_EditInit(unsigned w, unsigned h);
+void P_EditQuit(void);
+M_Entry void P_EditTask(void);
 
 bool P_Map_InExit(P_Map *map);
 

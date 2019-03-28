@@ -12,6 +12,8 @@
 
 #include "p_defs.h"
 
+#include "r_defs.h"
+
 #include <math.h>
 #include <stdlib.h>
 
@@ -69,7 +71,7 @@ unsigned P_SpawnEnemy(int x, int y)
    ent.health = 40;
    ent.team   = P_TeamEnemy.id;
 
-   ent.sprite = DGE_Texture_Get(M_Str("@gfx/Entity/Mobj.png"));
+   ent.sprite = R_TexEntity_Mobj;
 
    DGE_PhysicsThinker_Block(ent.id);
 
@@ -113,7 +115,7 @@ unsigned P_SpawnMissile(unsigned owner_, int damage, float angle, DGE_Fixed spee
    ent.vx = owner.vx + x * speed;
    ent.vy = owner.vy + y * speed;
 
-   ent.sprite = DGE_Texture_Get(M_Str("@gfx/Entity/Missile.png"));
+   ent.sprite = R_TexEntity_Missile;
 
    DGE_PhysicsThinker_Block(ent.id);
 
@@ -134,7 +136,7 @@ unsigned P_SpawnPlayer(int x, int y)
    ent.health = 100;
    ent.team   = P_TeamPlayer.id;
 
-   ent.sprite = DGE_Texture_Get(M_Str("@gfx/Entity/Mobj.png"));
+   ent.sprite = R_TexEntity_Mobj;
 
    DGE_PhysicsThinker_Block(ent.id);
 

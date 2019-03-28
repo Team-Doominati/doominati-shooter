@@ -1,4 +1,5 @@
 name WhatIsThis
+next map07
 size 30 39
 
 WWWWWWWWWWW

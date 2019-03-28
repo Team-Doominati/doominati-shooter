@@ -125,6 +125,8 @@ typedef enum M_Bind
    M_Bind_Lt,
    M_Bind_Rt,
    M_Bind_Up,
+   M_Bind_Use,
+   M_Bind_Wiz,
 } M_Bind;
 
 

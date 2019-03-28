@@ -7,6 +7,10 @@
 
 language eng
 {
+   "EditNew.desc" = "Starts editor with new map.";
+   "EditSave.desc" = "Prints editor map data.";
+   "EditQuit.desc" = "Quits editor.";
+
    "KillAll.desc" = "Kills all enemies.";
 
    "LoadMap.desc" = "Loads a map by pathname.";

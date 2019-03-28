@@ -30,6 +30,15 @@
 
 extern unsigned R_CharTab[36];
 
+extern unsigned R_TexEntity_Missile;
+extern unsigned R_TexEntity_Mobj;
+
+extern unsigned R_TexTile_Edit;
+extern unsigned R_TexTile_Exit;
+extern unsigned R_TexTile_Half;
+extern unsigned R_TexTile_Open;
+extern unsigned R_TexTile_Wall;
+
 
 //----------------------------------------------------------------------------|
 // Extern Functions                                                           |

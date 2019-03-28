@@ -19,6 +19,15 @@
 
 unsigned R_CharTab[36];
 
+unsigned R_TexEntity_Missile;
+unsigned R_TexEntity_Mobj;
+
+unsigned R_TexTile_Edit;
+unsigned R_TexTile_Exit;
+unsigned R_TexTile_Half;
+unsigned R_TexTile_Open;
+unsigned R_TexTile_Wall;
+
 
 //----------------------------------------------------------------------------|
 // Static Functions                                                           |
@@ -114,6 +123,15 @@ void R_Init(void)
    R_AlphaTab['O' - 'A'] = R_DigitTab[0];
    R_AlphaTab['P' - 'A'] = DGE_Texture_Get(M_Str("@gfx/GUI/P.png"));
    R_AlphaTab['S' - 'A'] = R_DigitTab[5];
+
+   R_TexEntity_Missile = DGE_Texture_Get(M_Str("@gfx/Entity/Missile.png"));
+   R_TexEntity_Mobj    = DGE_Texture_Get(M_Str("@gfx/Entity/Mobj.png"));
+
+   R_TexTile_Edit = DGE_Texture_Get(M_Str("@gfx/Tile/Edit.png"));
+   R_TexTile_Exit = DGE_Texture_Get(M_Str("@gfx/Tile/Exit.png"));
+   R_TexTile_Half = DGE_Texture_Get(M_Str("@gfx/Tile/Half.png"));
+   R_TexTile_Open = DGE_Texture_Get(M_Str("@gfx/Tile/Open.png"));
+   R_TexTile_Wall = DGE_Texture_Get(M_Str("@gfx/Tile/Wall.png"));
 }
 
 //

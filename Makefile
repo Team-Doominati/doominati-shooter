@@ -32,6 +32,7 @@ shooter_H = \
 
 shooter_IR = \
 	build/ir/shooter/m_main.ir \
+	build/ir/shooter/p_edit.ir \
 	build/ir/shooter/p_main.ir \
 	build/ir/shooter/p_map.ir \
 	build/ir/shooter/p_score.ir \
@@ -83,6 +84,7 @@ shooter_gfx = \
 	build/data/gfx/GUI/E.png \
 	build/data/gfx/GUI/H.png \
 	build/data/gfx/GUI/P.png \
+	build/data/gfx/Tile/Edit.png \
 	build/data/gfx/Tile/Exit.png \
 	build/data/gfx/Tile/Half.png \
 	build/data/gfx/Tile/Open.png \
@@ -110,7 +112,8 @@ shooter_maps = \
 	build/data/maps/map03 \
 	build/data/maps/map04 \
 	build/data/maps/map05 \
-	build/data/maps/map06
+	build/data/maps/map06 \
+	build/data/maps/map07
 
 maps: $(shooter_maps)
 

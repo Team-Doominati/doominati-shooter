@@ -394,23 +394,56 @@ M_ShellDefn(EditSave)
       return 1;
    }
 
-   printf("Map data:\nsize %u %u\n\n", P_EditW, P_EditH);
-
-   for(int ty = 0; ty != P_EditH; ++ty)
+   if(argc == 1)
    {
-      for(int tx = 0; tx != P_EditW; ++tx)
-         putchar(P_EditTiles[ty * P_EditW + tx].type);
-      putchar('\n');
-   }
+      printf("Map data:\nsize %u %u\n\n", P_EditW, P_EditH);
 
-   for(int ty = 0; ty != P_EditH; ++ty)
+      for(int ty = 0; ty != P_EditH; ++ty)
+      {
+         for(int tx = 0; tx != P_EditW; ++tx)
+            putchar(P_EditTiles[ty * P_EditW + tx].type);
+         putchar('\n');
+      }
+
+      for(int ty = 0; ty != P_EditH; ++ty)
+      {
+         for(int tx = 0; tx != P_EditW; ++tx)
+            putchar(P_EditMobjs[ty * P_EditW + tx].type);
+         putchar('\n');
+      }
+
+      printf("End map data.\n");
+   }
+   else if(argc == 2)
    {
-      for(int tx = 0; tx != P_EditW; ++tx)
-         putchar(P_EditMobjs[ty * P_EditW + tx].type);
-      putchar('\n');
-   }
+      size_t len = P_EditH * P_EditW * 2 + P_EditH * 2 + 33;
+      char  *buf = malloc(len), *itr = buf;
 
-   printf("End map data.\n");
+      itr += sprintf(itr, "size %u %u\n\n", P_EditW, P_EditH);
+
+      for(int ty = 0; ty != P_EditH; ++ty)
+      {
+         for(int tx = 0; tx != P_EditW; ++tx)
+            *itr++ = P_EditTiles[ty * P_EditW + tx].type;
+         *itr++ = '\n';
+      }
+
+      for(int ty = 0; ty != P_EditH; ++ty)
+      {
+         for(int tx = 0; tx != P_EditW; ++tx)
+            *itr++ = P_EditMobjs[ty * P_EditW + tx].type;
+         *itr++ = '\n';
+      }
+
+      itr += sprintf(itr, "EOF\n");
+
+      if(DGE_File_Create(argv[1], buf, itr - buf) < 0)
+         fprintf(stderr, "failed to write '%s'\n", argv[1]);
+      else
+         printf("map written to '%s'\n", argv[1]);
+
+      free(buf);
+   }
 
    return 0;
 }

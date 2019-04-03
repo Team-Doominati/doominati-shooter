@@ -9,7 +9,7 @@ Game
 {
    Input
    {
-      NumBind = 10 ;
+      NumBind = 16;
    }
 }
 
@@ -17,10 +17,10 @@ GL
 {
    Window
    {
-      Size  = 500 2D0 ;
+      Size  = 1280 720;
       Title = "Doominati: Shoot-Bang";
    }
 }
 
-# EOF
+## EOF
 

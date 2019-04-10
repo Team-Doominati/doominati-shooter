@@ -63,6 +63,8 @@ M_EntryMain int main(void)
    DGE_Input_SetBindKey(M_Bind_Use, 'e');
    DGE_Input_SetBindKey(M_Bind_Wiz, 'q');
 
+   DGE_Input_SetBindKey(M_Bind_Halt, ' ');
+
    R_Init();
    P_Init();
 

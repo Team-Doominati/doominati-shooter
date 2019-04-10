@@ -117,8 +117,6 @@
 //
 typedef enum M_Bind
 {
-   M_Bind_None,
-
    M_Bind_Alt,
    M_Bind_Atk,
    M_Bind_Dn,
@@ -127,6 +125,8 @@ typedef enum M_Bind
    M_Bind_Up,
    M_Bind_Use,
    M_Bind_Wiz,
+
+   M_Bind_Halt,
 } M_Bind;
 
 
@@ -136,6 +136,13 @@ typedef enum M_Bind
 
 extern int M_ScreenH;
 extern int M_ScreenW;
+
+
+//----------------------------------------------------------------------------|
+// Extern Functions                                                           |
+//
+
+extern unsigned M_Fib(unsigned i);
 
 
 #endif//M_DEFS_H__

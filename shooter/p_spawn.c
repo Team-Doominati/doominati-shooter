@@ -27,7 +27,7 @@
 //
 static unsigned P_SpawnBase(int x, int y)
 {
-   DGE_Entity ent = {DGE_Entity_Create(0)};
+   P_Entity ent = {DGE_Entity_Create(6)};
 
    ent.friction = 0.5ulr;
    ent.mass     = 8;
@@ -62,7 +62,7 @@ static unsigned P_SpawnBase(int x, int y)
 //
 unsigned P_SpawnEnemy(int x, int y)
 {
-   DGE_Entity ent = {P_SpawnBase(x, y)};
+   P_Entity ent = {P_SpawnBase(x, y)};
 
    ent.cr = 1.0ulr;
    ent.cg = 0.0ulr;
@@ -72,6 +72,9 @@ unsigned P_SpawnEnemy(int x, int y)
    ent.team   = P_TeamEnemy.id;
 
    ent.sprite = R_TexEntity_Mobj;
+
+   ent.attack1 = P_Attack_Slow;
+   ent.attack2 = P_Attack_Slow;
 
    DGE_PhysicsThinker_Block(ent.id);
 
@@ -87,7 +90,7 @@ unsigned P_SpawnEnemy(int x, int y)
 //
 unsigned P_SpawnMissile(unsigned owner_, int damage, float angle, DGE_Fixed speed)
 {
-   DGE_Entity owner = {owner_};
+   P_Entity owner = {owner_};
    DGE_MissileEntity ent = {DGE_MissileEntity_Create(0)};
 
    ent.damage = damage;
@@ -127,16 +130,25 @@ unsigned P_SpawnMissile(unsigned owner_, int damage, float angle, DGE_Fixed spee
 //
 unsigned P_SpawnPlayer(int x, int y)
 {
-   DGE_Entity ent = {P_SpawnBase(x, y)};
+   P_Entity ent = {P_SpawnBase(x, y)};
 
    ent.cr = 0.0ulr;
    ent.cg = 1.0ulr;
    ent.cb = 0.0ulr;
 
-   ent.health = 100;
+   ent.health = P_PlayerStore.health;
    ent.team   = P_TeamPlayer.id;
 
    ent.sprite = R_TexEntity_Mobj;
+
+   ent.attack1 = P_PlayerStore.attack1;
+   ent.attack2 = P_PlayerStore.attack2;
+
+   ent.ammo    = P_PlayerStore.ammo;
+
+   ent.gunFast = P_PlayerStore.gunFast;
+   ent.gunHard = P_PlayerStore.gunHard;
+   ent.gunWide = P_PlayerStore.gunWide;
 
    DGE_PhysicsThinker_Block(ent.id);
 

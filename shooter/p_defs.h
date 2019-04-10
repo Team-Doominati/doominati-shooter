@@ -34,6 +34,9 @@
 // Types                                                                      |
 //
 
+typedef unsigned (*P_AttackFunc)(unsigned id, float angle);
+typedef bool (*P_CondFunc)(unsigned id);
+
 //
 // P_State
 //
@@ -45,9 +48,43 @@ typedef enum P_State
    P_State_Edit,
 
    P_State_Live,
-   P_State_Init,
+   P_State_Shop,
    P_State_Halt,
+   P_State_Init,
 } P_State;
+
+//
+// P_Entity
+//
+typedef struct P_Entity
+{
+   DGE_Unsig id;
+
+   DGE_EntityProps()
+
+   DGE_PropMem(P_AttackFunc, attack1, DGE_OME_Entity+0)
+   DGE_PropMem(P_AttackFunc, attack2, DGE_OME_Entity+1)
+
+   DGE_PropMem(unsigned, ammo, DGE_OME_Entity+2)
+
+   DGE_PropMem(unsigned, gunFast, DGE_OME_Entity+3)
+   DGE_PropMem(unsigned, gunHard, DGE_OME_Entity+4)
+   DGE_PropMem(unsigned, gunWide, DGE_OME_Entity+5)
+} P_Entity;
+
+//
+// P_EntityStore
+//
+typedef struct P_EntityStore
+{
+   P_AttackFunc attack1;
+   P_AttackFunc attack2;
+   unsigned     ammo;
+   unsigned     gunFast;
+   unsigned     gunHard;
+   unsigned     gunWide;
+   unsigned     health;
+} P_EntityStore;
 
 //
 // P_Map
@@ -83,7 +120,8 @@ typedef struct P_Tile
 
 extern P_Map *P_MapCur;
 
-extern DGE_Entity P_Player;
+extern P_Entity      P_Player;
+extern P_EntityStore P_PlayerStore;
 
 extern unsigned P_Score;
 
@@ -96,6 +134,14 @@ extern DGE_Team P_TeamPlayer;
 //----------------------------------------------------------------------------|
 // Extern Functions                                                           |
 //
+
+unsigned P_Attack_Fast(unsigned id, float angle);
+unsigned P_Attack_Hard(unsigned id, float angle);
+unsigned P_Attack_Slow(unsigned id, float angle);
+unsigned P_Attack_Wide(unsigned id, float angle);
+
+bool P_Cond_Always(unsigned id);
+bool P_Cond_Never(unsigned id);
 
 void P_EditInit(unsigned w, unsigned h);
 void P_EditQuit(void);
@@ -116,6 +162,10 @@ bool P_Map_ReadHead(P_Map *map, FILE *in);
 
 void P_Score_Add(unsigned score);
 void P_Score_Sub(unsigned score);
+
+void P_ShopInit(void);
+void P_ShopQuit(void);
+void P_ShopTask(void);
 
 unsigned P_SpawnEnemy(int x, int y);
 

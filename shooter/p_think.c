@@ -25,7 +25,7 @@
 //
 M_Entry void P_Think_Enemy(unsigned id)
 {
-   DGE_Entity ent = {id};
+   P_Entity ent = {id};
 
    DGE_Object_RefAdd(ent.id);
 
@@ -35,6 +35,8 @@ M_Entry void P_Think_Enemy(unsigned id)
 
    for(; P_StateCur >= P_State_Live; DGE_Task_Sleep(0, 1))
    {
+      if(P_StateCur > P_State_Live) continue;
+
       if(ent.health <= 0)
       {
          --P_MapCur->mobjC;
@@ -53,12 +55,10 @@ M_Entry void P_Think_Enemy(unsigned id)
          ent.vy = ent.vy + (short accum)y * 0.5hk;
       }
 
+      ent.ammo = 100;
+
       if(!cooldown && rand() < RAND_MAX / 16)
-      {
-         float error = rand() / ((float)RAND_MAX * 32) - 1/64.0f;
-         P_SpawnMissile(ent.id, 10, angle + error, 4);
-         cooldown = 26;
-      }
+         cooldown = ent.attack1(ent.id, angle);
 
       if(cooldown) --cooldown;
    }
@@ -71,7 +71,7 @@ M_Entry void P_Think_Enemy(unsigned id)
 //
 M_Entry void P_Think_Player(unsigned id)
 {
-   DGE_Entity ent = {id};
+   P_Entity ent = {id};
 
    DGE_Object_RefAdd(ent.id);
 
@@ -81,45 +81,48 @@ M_Entry void P_Think_Player(unsigned id)
 
    for(; P_StateCur >= P_State_Live; DGE_Task_Sleep(0, 1))
    {
+      if(P_StateCur > P_State_Live) continue;
+
       if(ent.health <= 0)
       {
-         P_Score_Sub(1000);
+         P_Score_Sub(500);
          break;
       }
-
-      unsigned btnAtk = DGE_Input_GetButton(0, M_Bind_Atk);
-      unsigned btnAlt = DGE_Input_GetButton(0, M_Bind_Alt);
-
-      DGE_Point2I cursor = DGE_Input_GetCursor(0);
-
-      if(!cooldown && (btnAtk & DGE_Button_Down))
-      {
-         float error = rand() / ((float)RAND_MAX * 8) - 1/16.0f;
-         float angle = atan2f(cursor.y - M_ScreenH / 2, cursor.x - M_ScreenW / 2);
-         P_SpawnMissile(ent.id, 10, angle + error, 12);
-
-         cooldown = 6;
-      }
-
-      if(!cooldown && (btnAlt & DGE_Button_Down))
-      {
-         float angle = atan2f(cursor.y - M_ScreenH / 2, cursor.x - M_ScreenW / 2);
-         P_SpawnMissile(ent.id, 40, angle, 8);
-
-         cooldown = 26;
-      }
-
-      if(cooldown) --cooldown;
 
       if(DGE_Input_GetButton(0, M_Bind_Up) & DGE_Button_Down) ent.vy = ent.vy - 0.5hk;
       if(DGE_Input_GetButton(0, M_Bind_Dn) & DGE_Button_Down) ent.vy = ent.vy + 0.5hk;
       if(DGE_Input_GetButton(0, M_Bind_Lt) & DGE_Button_Down) ent.vx = ent.vx - 0.5hk;
       if(DGE_Input_GetButton(0, M_Bind_Rt) & DGE_Button_Down) ent.vx = ent.vx + 0.5hk;
+
+      if(P_StateCur > P_State_Live) continue;
+
+      DGE_Point2I cursor = DGE_Input_GetCursor(0);
+      float angle = atan2f(cursor.y - M_ScreenH / 2, cursor.x - M_ScreenW / 2);
+
+      if(!cooldown && (DGE_Input_GetButton(0, M_Bind_Atk) & DGE_Button_Down))
+         cooldown = ent.attack1(ent.id, angle);
+
+      if(!cooldown && (DGE_Input_GetButton(0, M_Bind_Alt) & DGE_Button_Down))
+         cooldown = ent.attack2(ent.id, angle);
+
+      if(cooldown) --cooldown;
+   }
+
+   // Sync to player store.
+   if(P_Player.id == ent.id)
+   {
+      P_PlayerStore.attack1 = ent.attack1;
+      P_PlayerStore.attack2 = ent.attack2;
+      P_PlayerStore.ammo    = ent.ammo;
+      P_PlayerStore.gunFast = ent.gunFast;
+      P_PlayerStore.gunHard = ent.gunHard;
+      P_PlayerStore.gunWide = ent.gunWide;
+      P_PlayerStore.health  = ent.health > 0 ? ent.health : 100;
+
+      P_Player.id = 0;
    }
 
    DGE_Object_RefSub(ent.id);
-
-   if(P_Player.id == id) P_Player.id = 0;
 }
 
 // EOF

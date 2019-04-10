@@ -17,10 +17,23 @@
 // Extern Objects                                                             |
 //
 
-unsigned R_CharTab[36];
+unsigned R_CharTabL[256];
+unsigned R_CharTabS[256];
 
 unsigned R_TexEntity_Missile;
 unsigned R_TexEntity_Mobj;
+
+unsigned R_TexGUI_Icon_Blank;
+
+unsigned R_TexGUI_Icon_GunFast;
+unsigned R_TexGUI_Icon_GunSlow;
+unsigned R_TexGUI_Icon_GunWide;
+
+unsigned R_TexGUI_Icon_Select1;
+unsigned R_TexGUI_Icon_Select2;
+
+unsigned R_TexGUI_Icon_ShopAmmo;
+unsigned R_TexGUI_Icon_ShopHeal;
 
 unsigned R_TexTile_Edit;
 unsigned R_TexTile_Exit;
@@ -50,39 +63,33 @@ M_Callback("DrawPost") static void DrawHudCB(void)
       health <= 50 ? 1.0ulr : health < 100 ? 1.0hk - (health - 50) / 50.0hk : 0.0ulr,
       health < 50 ? health / 50.0hk : 1.0ulr, 0.0ulr);
 
-   DGE_Texture_Bind(R_AlphaTab['H' - 'A']);
-   DGE_Draw_Rectangle( 0, 0, 20, 32);
-   DGE_Texture_Bind(R_AlphaTab['P' - 'A']);
-   DGE_Draw_Rectangle(20, 0, 40, 32);
+   R_DrawCharL( 0, 0, 'H');
+   R_DrawCharL(20, 0, 'P');
 
-   R_DrawDigitsU(40, 0, 3, health);
+   R_DrawDigitsL_U(40, 0, 3, health);
 
-   // Draw respawn time.
+   DGE_Draw_SetColor(1.0ulr, 1.0ulr, 1.0ulr);
 
-   if(P_MapCur->respT < P_Map_RespDelay)
-   {
-      DGE_Draw_SetColor(0.0ulr, 0.0ulr, 1.0ulr);
-      R_DrawDigitsU(40, 32, 3, P_MapCur->respT);
-   }
+   R_DrawCharL(100, 0, ' ');
+
+   // Draw ammo.
+
+   unsigned ammo = P_Player.id ? P_Player.ammo : 0;
+   if(ammo > 9999) ammo = 9999;
+
+   DGE_Draw_SetColor(1.0ulr, 1.0ulr, 0.0ulr);
+
+   R_DrawCharL(120, 0, 'A');
+   R_DrawCharL(140, 0, 'P');
+
+   R_DrawDigitsL_U(160, 0, 4, ammo);
 
    // Draw score.
 
    DGE_Draw_SetColor(1.0ulr, 1.0ulr, 1.0ulr);
-   DGE_Texture_Bind(R_AlphaTab['S' - 'A']);
-   DGE_Draw_Rectangle(M_ScreenW - 220, 0, M_ScreenW - 200, 32);
-   DGE_Texture_Bind(R_AlphaTab['C' - 'A']);
-   DGE_Draw_Rectangle(M_ScreenW - 200, 0, M_ScreenW - 180, 32);
-   R_DrawDigitsU(M_ScreenW - 180, 0, 9, P_Score);
-
-   // Draw next map time.
-
-   if(P_MapCur->nextT < P_Map_NextDelay)
-   {
-      DGE_Draw_SetColor(0.0ulr, 0.0ulr, 1.0ulr);
-      DGE_Texture_Bind(R_AlphaTab['E' - 'A']);
-      DGE_Draw_Rectangle(M_ScreenW - 220, 32, M_ScreenW - 200, 64);
-      R_DrawDigitsU(M_ScreenW - 200, 32, 4, P_MapCur->nextT);
-   }
+   R_DrawCharL(M_ScreenW - 220, 0, 'S');
+   R_DrawCharL(M_ScreenW - 200, 0, 'C');
+   R_DrawDigitsL_U(M_ScreenW - 180, 0, 9, P_Score);
 
    // Draw enemy count.
 
@@ -90,9 +97,38 @@ M_Callback("DrawPost") static void DrawHudCB(void)
    if(mobjC > 9999) mobjC = 9999;
 
    DGE_Draw_SetColor(1.0ulr, 0.0ulr, 0.0ulr);
-   DGE_Texture_Bind(R_AlphaTab['E' - 'A']);
-   DGE_Draw_Rectangle(M_ScreenW - 100, 32, M_ScreenW - 80, 64);
-   R_DrawDigitsU(M_ScreenW - 80, 32, 4, mobjC);
+   R_DrawCharL(M_ScreenW - 120, 32, 'E');
+   R_DrawCharL(M_ScreenW - 100, 32, 'C');
+   R_DrawDigitsL_U(M_ScreenW - 80, 32, 4, mobjC);
+
+   // Draw respawn time.
+
+   if(P_MapCur->respT < P_Map_RespDelay)
+   {
+      DGE_Draw_SetColor(1.0ulr, 0.0ulr, 0.0ulr);
+      R_DrawDigitsL_U(M_ScreenW / 2 - 40, 32, 4, P_MapCur->respT);
+   }
+
+   // Draw next map time.
+
+   if(P_MapCur->nextT < P_Map_NextDelay)
+   {
+      DGE_Draw_SetColor(0.0ulr, 1.0ulr, 0.0ulr);
+      R_DrawDigitsL_U(M_ScreenW / 2 - 40, 32, 4, P_MapCur->nextT);
+   }
+
+   // Draw pause indicator.
+   if(P_StateCur == P_State_Halt)
+   {
+      int x = M_ScreenW / 2 - 50;
+
+      DGE_Draw_SetColor(0.0ulr, 1.0ulr, 0.0ulr);
+      R_DrawCharL(x +  0, 0, 'P');
+      R_DrawCharL(x + 20, 0, 'A');
+      R_DrawCharL(x + 40, 0, 'U');
+      R_DrawCharL(x + 60, 0, 'S');
+      R_DrawCharL(x + 80, 0, 'E');
+   }
 }
 
 
@@ -105,27 +141,56 @@ M_Callback("DrawPost") static void DrawHudCB(void)
 //
 void R_Init(void)
 {
-   R_DigitTab[0] = DGE_Texture_Get(M_Str("@gfx/GUI/0.png"));
-   R_DigitTab[1] = DGE_Texture_Get(M_Str("@gfx/GUI/1.png"));
-   R_DigitTab[2] = DGE_Texture_Get(M_Str("@gfx/GUI/2.png"));
-   R_DigitTab[3] = DGE_Texture_Get(M_Str("@gfx/GUI/3.png"));
-   R_DigitTab[4] = DGE_Texture_Get(M_Str("@gfx/GUI/4.png"));
-   R_DigitTab[5] = DGE_Texture_Get(M_Str("@gfx/GUI/5.png"));
-   R_DigitTab[6] = DGE_Texture_Get(M_Str("@gfx/GUI/6.png"));
-   R_DigitTab[7] = DGE_Texture_Get(M_Str("@gfx/GUI/7.png"));
-   R_DigitTab[8] = DGE_Texture_Get(M_Str("@gfx/GUI/8.png"));
-   R_DigitTab[9] = DGE_Texture_Get(M_Str("@gfx/GUI/9.png"));
+   R_CharTabL[' '] = DGE_Texture_Get(M_Str("@gfx/GUI/DigLarge/20.png"));
 
-   R_AlphaTab['C' - 'A'] = DGE_Texture_Get(M_Str("@gfx/GUI/C.png"));
-   R_AlphaTab['E' - 'A'] = DGE_Texture_Get(M_Str("@gfx/GUI/E.png"));
-   R_AlphaTab['H' - 'A'] = DGE_Texture_Get(M_Str("@gfx/GUI/H.png"));
-   R_AlphaTab['I' - 'A'] = R_DigitTab[1];
-   R_AlphaTab['O' - 'A'] = R_DigitTab[0];
-   R_AlphaTab['P' - 'A'] = DGE_Texture_Get(M_Str("@gfx/GUI/P.png"));
-   R_AlphaTab['S' - 'A'] = R_DigitTab[5];
+   R_CharTabL['0'] = DGE_Texture_Get(M_Str("@gfx/GUI/DigLarge/0.png"));
+   R_CharTabL['1'] = DGE_Texture_Get(M_Str("@gfx/GUI/DigLarge/1.png"));
+   R_CharTabL['2'] = DGE_Texture_Get(M_Str("@gfx/GUI/DigLarge/2.png"));
+   R_CharTabL['3'] = DGE_Texture_Get(M_Str("@gfx/GUI/DigLarge/3.png"));
+   R_CharTabL['4'] = DGE_Texture_Get(M_Str("@gfx/GUI/DigLarge/4.png"));
+   R_CharTabL['5'] = DGE_Texture_Get(M_Str("@gfx/GUI/DigLarge/5.png"));
+   R_CharTabL['6'] = DGE_Texture_Get(M_Str("@gfx/GUI/DigLarge/6.png"));
+   R_CharTabL['7'] = DGE_Texture_Get(M_Str("@gfx/GUI/DigLarge/7.png"));
+   R_CharTabL['8'] = DGE_Texture_Get(M_Str("@gfx/GUI/DigLarge/8.png"));
+   R_CharTabL['9'] = DGE_Texture_Get(M_Str("@gfx/GUI/DigLarge/9.png"));
+
+   R_CharTabL['A'] = DGE_Texture_Get(M_Str("@gfx/GUI/DigLarge/A.png"));
+   R_CharTabL['C'] = DGE_Texture_Get(M_Str("@gfx/GUI/DigLarge/C.png"));
+   R_CharTabL['E'] = DGE_Texture_Get(M_Str("@gfx/GUI/DigLarge/E.png"));
+   R_CharTabL['H'] = DGE_Texture_Get(M_Str("@gfx/GUI/DigLarge/H.png"));
+   R_CharTabL['I'] = R_CharTabL['1'];
+   R_CharTabL['O'] = R_CharTabL['0'];
+   R_CharTabL['P'] = DGE_Texture_Get(M_Str("@gfx/GUI/DigLarge/P.png"));
+   R_CharTabL['S'] = R_CharTabL['5'];
+   R_CharTabL['U'] = DGE_Texture_Get(M_Str("@gfx/GUI/DigLarge/U.png"));
+
+   R_CharTabS[' '] = DGE_Texture_Get(M_Str("@gfx/GUI/DigSmall/20.png"));
+
+   R_CharTabS['0'] = DGE_Texture_Get(M_Str("@gfx/GUI/DigSmall/0.png"));
+   R_CharTabS['1'] = DGE_Texture_Get(M_Str("@gfx/GUI/DigSmall/1.png"));
+   R_CharTabS['2'] = DGE_Texture_Get(M_Str("@gfx/GUI/DigSmall/2.png"));
+   R_CharTabS['3'] = DGE_Texture_Get(M_Str("@gfx/GUI/DigSmall/3.png"));
+   R_CharTabS['4'] = DGE_Texture_Get(M_Str("@gfx/GUI/DigSmall/4.png"));
+   R_CharTabS['5'] = DGE_Texture_Get(M_Str("@gfx/GUI/DigSmall/5.png"));
+   R_CharTabS['6'] = DGE_Texture_Get(M_Str("@gfx/GUI/DigSmall/6.png"));
+   R_CharTabS['7'] = DGE_Texture_Get(M_Str("@gfx/GUI/DigSmall/7.png"));
+   R_CharTabS['8'] = DGE_Texture_Get(M_Str("@gfx/GUI/DigSmall/8.png"));
+   R_CharTabS['9'] = DGE_Texture_Get(M_Str("@gfx/GUI/DigSmall/9.png"));
 
    R_TexEntity_Missile = DGE_Texture_Get(M_Str("@gfx/Entity/Missile.png"));
    R_TexEntity_Mobj    = DGE_Texture_Get(M_Str("@gfx/Entity/Mobj.png"));
+
+   R_TexGUI_Icon_Blank = DGE_Texture_Get(M_Str("@gfx/GUI/Icon/Blank.png"));
+
+   R_TexGUI_Icon_GunFast = DGE_Texture_Get(M_Str("@gfx/GUI/Icon/GunFast.png"));
+   R_TexGUI_Icon_GunSlow = DGE_Texture_Get(M_Str("@gfx/GUI/Icon/GunSlow.png"));
+   R_TexGUI_Icon_GunWide = DGE_Texture_Get(M_Str("@gfx/GUI/Icon/GunWide.png"));
+
+   R_TexGUI_Icon_Select1 = DGE_Texture_Get(M_Str("@gfx/GUI/Icon/Select1.png"));
+   R_TexGUI_Icon_Select2 = DGE_Texture_Get(M_Str("@gfx/GUI/Icon/Select2.png"));
+
+   R_TexGUI_Icon_ShopAmmo = DGE_Texture_Get(M_Str("@gfx/GUI/Icon/ShopAmmo.png"));
+   R_TexGUI_Icon_ShopHeal = DGE_Texture_Get(M_Str("@gfx/GUI/Icon/ShopHeal.png"));
 
    R_TexTile_Edit = DGE_Texture_Get(M_Str("@gfx/Tile/Edit.png"));
    R_TexTile_Exit = DGE_Texture_Get(M_Str("@gfx/Tile/Exit.png"));

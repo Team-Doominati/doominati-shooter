@@ -46,6 +46,8 @@ DGE_Callback static void ScoreAdder(unsigned score)
 {
    for(; score && P_StateCur >= P_State_Live; DGE_Task_Sleep(0, 1))
    {
+      if(P_StateCur > P_State_Live) continue;
+
       unsigned add = score > 100 ? score / 100 : 1;
       ScoreAdd(add);
       score -= add;
@@ -73,6 +75,8 @@ DGE_Callback static void ScoreSubber(unsigned score)
 {
    for(; score && P_StateCur >= P_State_Live; DGE_Task_Sleep(0, 1))
    {
+      if(P_StateCur > P_State_Live) continue;
+
       unsigned sub = score > 100 ? score / 100 : 1;
       ScoreSub(sub);
       score -= sub;

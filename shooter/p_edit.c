@@ -81,28 +81,18 @@ M_Callback("DrawPost") static void P_EditHudCB(void)
    DGE_Draw_SetColor(P_EditMobj_TexR, P_EditMobj_TexG, P_EditMobj_TexB);
 
    if(P_EditMobj_Tex)
-   {
-      DGE_Texture_Bind(P_EditMobj_Tex);
-      DGE_Draw_Rectangle(P_TileSize, 0, P_TileSize * 2, P_TileSize);
-   }
+      R_DrawTex(P_EditMobj_Tex, P_TileSize, 0, P_TileSize, P_TileSize);
 
    DGE_Draw_SetColor(1.0ulr, 1.0ulr, 1.0ulr);
 
    if(P_EditTile_TexF)
-   {
-      DGE_Texture_Bind(P_EditTile_TexF);
-      DGE_Draw_Rectangle(0, 0, P_TileSize, P_TileSize);
-   }
+      R_DrawTex(P_EditTile_TexF, 0, 0, P_TileSize, P_TileSize);
 
    if(P_EditTile_TexC)
-   {
-      DGE_Texture_Bind(P_EditTile_TexC);
-      DGE_Draw_Rectangle(0, 0, P_TileSize, P_TileSize);
-   }
+      R_DrawTex(P_EditTile_TexC,0, 0, P_TileSize, P_TileSize);
 
-   DGE_Texture_Bind(R_TexTile_Edit);
-   DGE_Draw_Rectangle(0, 0, P_TileSize, P_TileSize);
-   DGE_Draw_Rectangle(P_TileSize, 0, P_TileSize * 2, P_TileSize);
+   R_DrawTex(R_TexTile_Edit, 0, 0, P_TileSize, P_TileSize);
+   R_DrawTex(R_TexTile_Edit, P_TileSize, 0, P_TileSize, P_TileSize);
 }
 
 //

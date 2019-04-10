@@ -17,21 +17,26 @@
 
 
 //----------------------------------------------------------------------------|
-// Macros                                                                     |
-//
-
-#define R_AlphaTab (R_CharTab + 10)
-#define R_DigitTab (R_CharTab +  0)
-
-
-//----------------------------------------------------------------------------|
 // Extern Objects                                                             |
 //
 
-extern unsigned R_CharTab[36];
+extern unsigned R_CharTabL[256];
+extern unsigned R_CharTabS[256];
 
 extern unsigned R_TexEntity_Missile;
 extern unsigned R_TexEntity_Mobj;
+
+extern unsigned R_TexGUI_Icon_Blank;
+
+extern unsigned R_TexGUI_Icon_GunFast;
+extern unsigned R_TexGUI_Icon_GunSlow;
+extern unsigned R_TexGUI_Icon_GunWide;
+
+extern unsigned R_TexGUI_Icon_Select1;
+extern unsigned R_TexGUI_Icon_Select2;
+
+extern unsigned R_TexGUI_Icon_ShopAmmo;
+extern unsigned R_TexGUI_Icon_ShopHeal;
 
 extern unsigned R_TexTile_Edit;
 extern unsigned R_TexTile_Exit;
@@ -44,7 +49,12 @@ extern unsigned R_TexTile_Wall;
 // Extern Functions                                                           |
 //
 
-void R_DrawDigitsU(int x, int y, int w, unsigned i);
+void R_DrawCharL(int x, int y, char c);
+void R_DrawCharS(int x, int y, char c);
+void R_DrawDigitsL_U(int x, int y, int w, unsigned i);
+void R_DrawDigitsS_U(int x, int y, int w, unsigned i);
+
+void R_DrawTex(unsigned tex, int x, int y, int w, int h);
 
 void R_Init(void);
 void R_Task(void);

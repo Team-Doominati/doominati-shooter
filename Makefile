@@ -32,10 +32,14 @@ shooter_H = \
 
 shooter_IR = \
 	build/ir/shooter/m_main.ir \
+	build/ir/shooter/m_math.ir \
+	build/ir/shooter/p_attack.ir \
+	build/ir/shooter/p_cond.ir \
 	build/ir/shooter/p_edit.ir \
 	build/ir/shooter/p_main.ir \
 	build/ir/shooter/p_map.ir \
 	build/ir/shooter/p_score.ir \
+	build/ir/shooter/p_shop.ir \
 	build/ir/shooter/p_spawn.ir \
 	build/ir/shooter/p_think.ir \
 	build/ir/shooter/r_main.ir \
@@ -70,20 +74,42 @@ build/data/boot/gamedefs: gamedefs.txt | build/data/boot
 shooter_gfx = \
 	build/data/gfx/Entity/Missile.png \
 	build/data/gfx/Entity/Mobj.png \
-	build/data/gfx/GUI/0.png \
-	build/data/gfx/GUI/1.png \
-	build/data/gfx/GUI/2.png \
-	build/data/gfx/GUI/3.png \
-	build/data/gfx/GUI/4.png \
-	build/data/gfx/GUI/5.png \
-	build/data/gfx/GUI/6.png \
-	build/data/gfx/GUI/7.png \
-	build/data/gfx/GUI/8.png \
-	build/data/gfx/GUI/9.png \
-	build/data/gfx/GUI/C.png \
-	build/data/gfx/GUI/E.png \
-	build/data/gfx/GUI/H.png \
-	build/data/gfx/GUI/P.png \
+	build/data/gfx/GUI/DigLarge/20.png \
+	build/data/gfx/GUI/DigLarge/0.png \
+	build/data/gfx/GUI/DigLarge/1.png \
+	build/data/gfx/GUI/DigLarge/2.png \
+	build/data/gfx/GUI/DigLarge/3.png \
+	build/data/gfx/GUI/DigLarge/4.png \
+	build/data/gfx/GUI/DigLarge/5.png \
+	build/data/gfx/GUI/DigLarge/6.png \
+	build/data/gfx/GUI/DigLarge/7.png \
+	build/data/gfx/GUI/DigLarge/8.png \
+	build/data/gfx/GUI/DigLarge/9.png \
+	build/data/gfx/GUI/DigLarge/A.png \
+	build/data/gfx/GUI/DigLarge/C.png \
+	build/data/gfx/GUI/DigLarge/E.png \
+	build/data/gfx/GUI/DigLarge/H.png \
+	build/data/gfx/GUI/DigLarge/P.png \
+	build/data/gfx/GUI/DigLarge/U.png \
+	build/data/gfx/GUI/DigSmall/20.png \
+	build/data/gfx/GUI/DigSmall/0.png \
+	build/data/gfx/GUI/DigSmall/1.png \
+	build/data/gfx/GUI/DigSmall/2.png \
+	build/data/gfx/GUI/DigSmall/3.png \
+	build/data/gfx/GUI/DigSmall/4.png \
+	build/data/gfx/GUI/DigSmall/5.png \
+	build/data/gfx/GUI/DigSmall/6.png \
+	build/data/gfx/GUI/DigSmall/7.png \
+	build/data/gfx/GUI/DigSmall/8.png \
+	build/data/gfx/GUI/DigSmall/9.png \
+	build/data/gfx/GUI/Icon/Blank.png \
+	build/data/gfx/GUI/Icon/GunFast.png \
+	build/data/gfx/GUI/Icon/GunSlow.png \
+	build/data/gfx/GUI/Icon/GunWide.png \
+	build/data/gfx/GUI/Icon/Select1.png \
+	build/data/gfx/GUI/Icon/Select2.png \
+	build/data/gfx/GUI/Icon/ShopAmmo.png \
+	build/data/gfx/GUI/Icon/ShopHeal.png \
 	build/data/gfx/Tile/Edit.png \
 	build/data/gfx/Tile/Exit.png \
 	build/data/gfx/Tile/Half.png \
@@ -92,7 +118,9 @@ shooter_gfx = \
 
 shooter_gfx_dir = \
 	build/data/gfx/Entity \
-	build/data/gfx/GUI \
+	build/data/gfx/GUI/DigLarge \
+	build/data/gfx/GUI/DigSmall \
+	build/data/gfx/GUI/Icon \
 	build/data/gfx/Tile
 
 gfx: $(shooter_gfx)
@@ -150,6 +178,15 @@ build/data/maps: | build/data
 build/data/gfx/Tile: | build/data/gfx
 	mkdir $@
 
+build/data/gfx/GUI/Icon: | build/data/gfx/GUI
+	mkdir $@
+
+build/data/gfx/GUI/DigSmall: | build/data/gfx/GUI
+	mkdir $@
+
+build/data/gfx/GUI/DigLarge: | build/data/gfx/GUI
+	mkdir $@
+
 build/data/gfx/GUI: | build/data/gfx
 	mkdir $@
 
@@ -184,6 +221,7 @@ clean:
 	rm -df build/data/maps
 	rm -f  $(shooter_gfx)
 	rm -df $(shooter_gfx_dir)
+	rm -df build/data/gfx/GUI
 	rm -df build/data/gfx
 	rm -f  $(shooter_NTS)
 	rm -df build/data/boot/textdefs

@@ -19,21 +19,6 @@
 // Extern Objects                                                             |
 //
 
-P_Entity P_Player;
-
-P_EntityStore P_PlayerStore =
-{
-   .attack1 = P_Attack_Fast,
-   .attack2 = P_Attack_Fast,
-
-   .ammo = 100,
-
-   .gunFast = 1,
-   .gunHard = 1,
-
-   .health = 100,
-};
-
 P_State P_StateCur = P_State_Stop;
 
 DGE_Team P_TeamEnemy;

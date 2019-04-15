@@ -36,6 +36,7 @@ shooter_IR = \
 	build/ir/shooter/p_attack.ir \
 	build/ir/shooter/p_cond.ir \
 	build/ir/shooter/p_edit.ir \
+	build/ir/shooter/p_entity.ir \
 	build/ir/shooter/p_main.ir \
 	build/ir/shooter/p_map.ir \
 	build/ir/shooter/p_score.ir \
@@ -89,6 +90,7 @@ shooter_gfx = \
 	build/data/gfx/GUI/DigLarge/C.png \
 	build/data/gfx/GUI/DigLarge/E.png \
 	build/data/gfx/GUI/DigLarge/H.png \
+	build/data/gfx/GUI/DigLarge/L.png \
 	build/data/gfx/GUI/DigLarge/P.png \
 	build/data/gfx/GUI/DigLarge/U.png \
 	build/data/gfx/GUI/DigSmall/20.png \
@@ -102,14 +104,23 @@ shooter_gfx = \
 	build/data/gfx/GUI/DigSmall/7.png \
 	build/data/gfx/GUI/DigSmall/8.png \
 	build/data/gfx/GUI/DigSmall/9.png \
+	build/data/gfx/GUI/DigSmall/C.png \
+	build/data/gfx/GUI/DigSmall/L.png \
 	build/data/gfx/GUI/Icon/Blank.png \
 	build/data/gfx/GUI/Icon/GunFast.png \
 	build/data/gfx/GUI/Icon/GunSlow.png \
 	build/data/gfx/GUI/Icon/GunWide.png \
+	build/data/gfx/GUI/Icon/MagBolt.png \
 	build/data/gfx/GUI/Icon/Select1.png \
 	build/data/gfx/GUI/Icon/Select2.png \
 	build/data/gfx/GUI/Icon/ShopAmmo.png \
 	build/data/gfx/GUI/Icon/ShopHeal.png \
+	build/data/gfx/GUI/Icon/StatCHA.png \
+	build/data/gfx/GUI/Icon/StatEND.png \
+	build/data/gfx/GUI/Icon/StatINT.png \
+	build/data/gfx/GUI/Icon/StatSTR.png \
+	build/data/gfx/GUI/Icon/StatVIT.png \
+	build/data/gfx/GUI/Icon/StatWIS.png \
 	build/data/gfx/Tile/Edit.png \
 	build/data/gfx/Tile/Exit.png \
 	build/data/gfx/Tile/Half.png \

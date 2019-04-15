@@ -29,11 +29,20 @@ unsigned R_TexGUI_Icon_GunFast;
 unsigned R_TexGUI_Icon_GunSlow;
 unsigned R_TexGUI_Icon_GunWide;
 
+unsigned R_TexGUI_Icon_MagBolt;
+
 unsigned R_TexGUI_Icon_Select1;
 unsigned R_TexGUI_Icon_Select2;
 
 unsigned R_TexGUI_Icon_ShopAmmo;
 unsigned R_TexGUI_Icon_ShopHeal;
+
+unsigned R_TexGUI_Icon_StatCHA;
+unsigned R_TexGUI_Icon_StatEND;
+unsigned R_TexGUI_Icon_StatINT;
+unsigned R_TexGUI_Icon_StatSTR;
+unsigned R_TexGUI_Icon_StatVIT;
+unsigned R_TexGUI_Icon_StatWIS;
 
 unsigned R_TexTile_Edit;
 unsigned R_TexTile_Exit;
@@ -59,9 +68,7 @@ M_Callback("DrawPost") static void DrawHudCB(void)
    if(health <   0) health =   0;
    if(health > 999) health = 999;
 
-   DGE_Draw_SetColor(
-      health <= 50 ? 1.0ulr : health < 100 ? 1.0hk - (health - 50) / 50.0hk : 0.0ulr,
-      health < 50 ? health / 50.0hk : 1.0ulr, 0.0ulr);
+   DGE_Draw_SetColor(0.0ulr, 1.0ulr, 0.0ulr);
 
    R_DrawCharL( 0, 0, 'H');
    R_DrawCharL(20, 0, 'P');
@@ -83,6 +90,33 @@ M_Callback("DrawPost") static void DrawHudCB(void)
    R_DrawCharL(140, 0, 'P');
 
    R_DrawDigitsL_U(160, 0, 4, ammo);
+
+   // Draw level.
+
+   unsigned level = P_Entity_Level(P_Player);
+   if(level > 9999) level = 9999;
+
+   DGE_Draw_SetColor(1.0ulr, 1.0ulr, 1.0ulr);
+
+   R_DrawCharL(0, 32, 'L');
+
+   R_DrawDigitsL_U(20, 32, 4, level);
+
+   DGE_Draw_SetColor(1.0ulr, 1.0ulr, 1.0ulr);
+
+   R_DrawCharL(100, 32, ' ');
+
+   // Draw mana.
+
+   unsigned mana = P_Player.id ? P_Player.mana : 0;
+   if(mana > 9999) mana = 9999;
+
+   DGE_Draw_SetColor(0.0ulr, 1.0ulr, 1.0ulr);
+
+   R_DrawCharL(120, 32, 'S');
+   R_DrawCharL(140, 32, 'P');
+
+   R_DrawDigitsL_U(160, 32, 4, mana);
 
    // Draw score.
 
@@ -159,6 +193,7 @@ void R_Init(void)
    R_CharTabL['E'] = DGE_Texture_Get(M_Str("@gfx/GUI/DigLarge/E.png"));
    R_CharTabL['H'] = DGE_Texture_Get(M_Str("@gfx/GUI/DigLarge/H.png"));
    R_CharTabL['I'] = R_CharTabL['1'];
+   R_CharTabL['L'] = DGE_Texture_Get(M_Str("@gfx/GUI/DigLarge/L.png"));
    R_CharTabL['O'] = R_CharTabL['0'];
    R_CharTabL['P'] = DGE_Texture_Get(M_Str("@gfx/GUI/DigLarge/P.png"));
    R_CharTabL['S'] = R_CharTabL['5'];
@@ -176,6 +211,11 @@ void R_Init(void)
    R_CharTabS['7'] = DGE_Texture_Get(M_Str("@gfx/GUI/DigSmall/7.png"));
    R_CharTabS['8'] = DGE_Texture_Get(M_Str("@gfx/GUI/DigSmall/8.png"));
    R_CharTabS['9'] = DGE_Texture_Get(M_Str("@gfx/GUI/DigSmall/9.png"));
+   R_CharTabS['C'] = DGE_Texture_Get(M_Str("@gfx/GUI/DigSmall/C.png"));
+   R_CharTabS['I'] = R_CharTabS['1'];
+   R_CharTabS['L'] = DGE_Texture_Get(M_Str("@gfx/GUI/DigSmall/L.png"));
+   R_CharTabS['O'] = R_CharTabS['0'];
+   R_CharTabS['S'] = R_CharTabS['5'];
 
    R_TexEntity_Missile = DGE_Texture_Get(M_Str("@gfx/Entity/Missile.png"));
    R_TexEntity_Mobj    = DGE_Texture_Get(M_Str("@gfx/Entity/Mobj.png"));
@@ -186,11 +226,20 @@ void R_Init(void)
    R_TexGUI_Icon_GunSlow = DGE_Texture_Get(M_Str("@gfx/GUI/Icon/GunSlow.png"));
    R_TexGUI_Icon_GunWide = DGE_Texture_Get(M_Str("@gfx/GUI/Icon/GunWide.png"));
 
+   R_TexGUI_Icon_MagBolt = DGE_Texture_Get(M_Str("@gfx/GUI/Icon/MagBolt.png"));
+
    R_TexGUI_Icon_Select1 = DGE_Texture_Get(M_Str("@gfx/GUI/Icon/Select1.png"));
    R_TexGUI_Icon_Select2 = DGE_Texture_Get(M_Str("@gfx/GUI/Icon/Select2.png"));
 
    R_TexGUI_Icon_ShopAmmo = DGE_Texture_Get(M_Str("@gfx/GUI/Icon/ShopAmmo.png"));
    R_TexGUI_Icon_ShopHeal = DGE_Texture_Get(M_Str("@gfx/GUI/Icon/ShopHeal.png"));
+
+   R_TexGUI_Icon_StatCHA = DGE_Texture_Get(M_Str("@gfx/GUI/Icon/StatCHA.png"));
+   R_TexGUI_Icon_StatEND = DGE_Texture_Get(M_Str("@gfx/GUI/Icon/StatEND.png"));
+   R_TexGUI_Icon_StatINT = DGE_Texture_Get(M_Str("@gfx/GUI/Icon/StatINT.png"));
+   R_TexGUI_Icon_StatVIT = DGE_Texture_Get(M_Str("@gfx/GUI/Icon/StatVIT.png"));
+   R_TexGUI_Icon_StatSTR = DGE_Texture_Get(M_Str("@gfx/GUI/Icon/StatSTR.png"));
+   R_TexGUI_Icon_StatWIS = DGE_Texture_Get(M_Str("@gfx/GUI/Icon/StatWIS.png"));
 
    R_TexTile_Edit = DGE_Texture_Get(M_Str("@gfx/Tile/Edit.png"));
    R_TexTile_Exit = DGE_Texture_Get(M_Str("@gfx/Tile/Exit.png"));

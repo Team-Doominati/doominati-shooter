@@ -32,11 +32,20 @@ extern unsigned R_TexGUI_Icon_GunFast;
 extern unsigned R_TexGUI_Icon_GunSlow;
 extern unsigned R_TexGUI_Icon_GunWide;
 
+extern unsigned R_TexGUI_Icon_MagBolt;
+
 extern unsigned R_TexGUI_Icon_Select1;
 extern unsigned R_TexGUI_Icon_Select2;
 
 extern unsigned R_TexGUI_Icon_ShopAmmo;
 extern unsigned R_TexGUI_Icon_ShopHeal;
+
+extern unsigned R_TexGUI_Icon_StatCHA;
+extern unsigned R_TexGUI_Icon_StatEND;
+extern unsigned R_TexGUI_Icon_StatINT;
+extern unsigned R_TexGUI_Icon_StatSTR;
+extern unsigned R_TexGUI_Icon_StatVIT;
+extern unsigned R_TexGUI_Icon_StatWIS;
 
 extern unsigned R_TexTile_Edit;
 extern unsigned R_TexTile_Exit;

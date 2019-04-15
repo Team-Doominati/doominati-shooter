@@ -23,10 +23,8 @@
 //
 // P_Think_Enemy
 //
-M_Entry void P_Think_Enemy(unsigned id)
+M_Entry void P_Think_Enemy(P_Entity ent)
 {
-   P_Entity ent = {id};
-
    DGE_Object_RefAdd(ent.id);
 
    float x, y;
@@ -44,6 +42,8 @@ M_Entry void P_Think_Enemy(unsigned id)
          break;
       }
 
+      P_Entity_Regen(ent);
+
       if(!P_Player.id) continue;
 
       float angle = atan2f(P_Player.y - ent.y, P_Player.x - ent.x);
@@ -58,7 +58,7 @@ M_Entry void P_Think_Enemy(unsigned id)
       ent.ammo = 100;
 
       if(!cooldown && rand() < RAND_MAX / 16)
-         cooldown = ent.attack1(ent.id, angle);
+         cooldown = ent.attack1(ent, angle);
 
       if(cooldown) --cooldown;
    }
@@ -69,10 +69,8 @@ M_Entry void P_Think_Enemy(unsigned id)
 //
 // P_Think_Player
 //
-M_Entry void P_Think_Player(unsigned id)
+M_Entry void P_Think_Player(P_Entity ent)
 {
-   P_Entity ent = {id};
-
    DGE_Object_RefAdd(ent.id);
 
    unsigned cooldown = 0;
@@ -89,6 +87,8 @@ M_Entry void P_Think_Player(unsigned id)
          break;
       }
 
+      P_Entity_Regen(ent);
+
       if(DGE_Input_GetButton(0, M_Bind_Up) & DGE_Button_Down) ent.vy = ent.vy - 0.5hk;
       if(DGE_Input_GetButton(0, M_Bind_Dn) & DGE_Button_Down) ent.vy = ent.vy + 0.5hk;
       if(DGE_Input_GetButton(0, M_Bind_Lt) & DGE_Button_Down) ent.vx = ent.vx - 0.5hk;
@@ -100,10 +100,10 @@ M_Entry void P_Think_Player(unsigned id)
       float angle = atan2f(cursor.y - M_ScreenH / 2, cursor.x - M_ScreenW / 2);
 
       if(!cooldown && (DGE_Input_GetButton(0, M_Bind_Atk) & DGE_Button_Down))
-         cooldown = ent.attack1(ent.id, angle);
+         cooldown = ent.attack1(ent, angle);
 
       if(!cooldown && (DGE_Input_GetButton(0, M_Bind_Alt) & DGE_Button_Down))
-         cooldown = ent.attack2(ent.id, angle);
+         cooldown = ent.attack2(ent, angle);
 
       if(cooldown) --cooldown;
    }
@@ -111,13 +111,7 @@ M_Entry void P_Think_Player(unsigned id)
    // Sync to player store.
    if(P_Player.id == ent.id)
    {
-      P_PlayerStore.attack1 = ent.attack1;
-      P_PlayerStore.attack2 = ent.attack2;
-      P_PlayerStore.ammo    = ent.ammo;
-      P_PlayerStore.gunFast = ent.gunFast;
-      P_PlayerStore.gunHard = ent.gunHard;
-      P_PlayerStore.gunWide = ent.gunWide;
-      P_PlayerStore.health  = ent.health > 0 ? ent.health : 100;
+      P_Entity_StoreSave(ent, &P_PlayerStore);
 
       P_Player.id = 0;
    }

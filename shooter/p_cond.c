@@ -20,7 +20,7 @@
 //
 // P_Cond_Always
 //
-bool P_Cond_Always(unsigned id)
+bool P_Cond_Always(P_Entity ent)
 {
    return true;
 }
@@ -28,7 +28,7 @@ bool P_Cond_Always(unsigned id)
 //
 // P_Cond_Never
 //
-bool P_Cond_Never(unsigned id)
+bool P_Cond_Never(P_Entity ent)
 {
    return false;
 }

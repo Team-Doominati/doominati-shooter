@@ -1,3 +1,4 @@
+level 3
 name Arena
 next map05
 size 32 32

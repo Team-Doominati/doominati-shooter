@@ -303,6 +303,8 @@ void P_Map_Read(P_Map *map, FILE *in)
    map->nextT = P_Map_NextDelay;
    map->respT = P_Map_RespDelay;
 
+   map->level = 0;
+
    map->w = 0;
    map->h = 0;
 
@@ -310,6 +312,8 @@ void P_Map_Read(P_Map *map, FILE *in)
    map->next[0] = '\0';
 
    while(P_Map_ReadHead(map, in)) {}
+
+   map->level = (map->level * 2 + P_EntityStore_Level(&P_PlayerStore)) / 3;
 
    map->data = malloc(map->w * map->h * 2);
 
@@ -356,6 +360,10 @@ bool P_Map_ReadHead(P_Map *map, FILE *in)
    if(head[0] == '#')
    {
       // Ignore as comment.
+   }
+   else if(strcmp(head, "level") == 0)
+   {
+      fscanf(in, " %u", &map->level);
    }
    else if(strcmp(head, "name") == 0)
    {

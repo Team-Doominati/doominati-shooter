@@ -1,3 +1,4 @@
+level 6
 name SuperSimple
 size 16 16
 

@@ -75,6 +75,13 @@ unsigned P_SpawnEnemy(int x, int y)
    ent.attack1 = P_Attack_Slow;
    ent.attack2 = P_Attack_Slow;
 
+   // Allocate stats.
+   unsigned level = P_MapCur->level;
+   ent.statEND = level / 2; level -= ent.statEND;
+   ent.statVIT = level / 3; level -= ent.statVIT;
+   ent.gunFast = level / 1; level -= ent.gunFast;
+
+   // Calculate stat-based values.
    ent.health = P_Entity_HealthMax(ent) / 2;
 
    DGE_PhysicsThinker_Block(ent.id);

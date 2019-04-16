@@ -1,3 +1,4 @@
+level 1
 name E-Way
 next map02
 size 16 12

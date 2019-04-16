@@ -133,8 +133,10 @@ typedef struct P_EntityStore
    unsigned     magBolt;
    unsigned     health;
    unsigned     mana;
+   unsigned     statCHA;
    unsigned     statEND;
    unsigned     statINT;
+   unsigned     statSTR;
    unsigned     statVIT;
    unsigned     statWIS;
 } P_EntityStore;
@@ -144,14 +146,15 @@ typedef struct P_EntityStore
 //
 typedef struct P_Map
 {
-   char  *data;
-   size_t exitC;
-   size_t mobjC;
-   size_t nextT;
-   size_t respT;
-   int    w, h;
-   char   name[32];
-   char   next[32];
+   char    *data;
+   size_t   exitC;
+   size_t   mobjC;
+   size_t   nextT;
+   size_t   respT;
+   unsigned level;
+   int      w, h;
+   char     name[32];
+   char     next[32];
 } P_Map;
 
 //
@@ -213,6 +216,8 @@ void P_Entity_Regen(P_Entity ent);
 
 void P_Entity_StoreLoad(P_Entity ent, P_EntityStore const *store);
 void P_Entity_StoreSave(P_Entity ent, P_EntityStore *store);
+
+unsigned P_EntityStore_Level(P_EntityStore *store);
 
 bool P_Map_InExit(P_Map *map);
 

@@ -93,7 +93,7 @@ M_Callback("DrawPost") static void DrawHudCB(void)
 
    // Draw level.
 
-   unsigned level = P_Entity_Level(P_Player);
+   unsigned level = P_Player.id ? P_Entity_Level(P_Player) : 0;
    if(level > 9999) level = 9999;
 
    DGE_Draw_SetColor(1.0ulr, 1.0ulr, 1.0ulr);
@@ -134,6 +134,19 @@ M_Callback("DrawPost") static void DrawHudCB(void)
    R_DrawCharL(M_ScreenW - 120, 32, 'E');
    R_DrawCharL(M_ScreenW - 100, 32, 'C');
    R_DrawDigitsL_U(M_ScreenW - 80, 32, 4, mobjC);
+
+   DGE_Draw_SetColor(1.0ulr, 0.0ulr, 0.0ulr);
+   R_DrawCharL(M_ScreenW - 140, 32, ' ');
+
+   // Draw enemy level.
+
+   level = P_MapCur->level;
+   if(level > 9999) level = 9999;
+
+   DGE_Draw_SetColor(1.0ulr, 0.0ulr, 0.0ulr);
+   R_DrawCharL(M_ScreenW - 260, 32, 'E');
+   R_DrawCharL(M_ScreenW - 240, 32, 'L');
+   R_DrawDigitsL_U(M_ScreenW - 220, 32, 4, level);
 
    // Draw respawn time.
 

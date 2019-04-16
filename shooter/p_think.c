@@ -38,7 +38,7 @@ M_Entry void P_Think_Enemy(P_Entity ent)
       if(ent.health <= 0)
       {
          --P_MapCur->mobjC;
-         P_Score_Add(100);
+         P_Score_Add(P_Entity_Level(ent) * 25 + 100);
          break;
       }
 

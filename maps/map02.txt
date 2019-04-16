@@ -1,3 +1,4 @@
+level 1
 name Daimap
 next map03
 size 18 15

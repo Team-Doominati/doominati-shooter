@@ -31,11 +31,6 @@ P_EntityStore P_PlayerStore =
    .health = 100,
 
    .mana = 100,
-
-   .statEND = 0,
-   .statINT = 0,
-   .statVIT = 0,
-   .statWIS = 0,
 };
 
 
@@ -133,8 +128,10 @@ void P_Entity_StoreLoad(P_Entity ent, P_EntityStore const *store)
    ent.magBolt  = store->magBolt;
    ent.health   = store->health;
    ent.mana     = store->mana;
+   ent.statCHA  = store->statCHA;
    ent.statEND  = store->statEND;
    ent.statINT  = store->statINT;
+   ent.statSTR  = store->statSTR;
    ent.statVIT  = store->statVIT;
    ent.statWIS  = store->statWIS;
 }
@@ -153,10 +150,32 @@ void P_Entity_StoreSave(P_Entity ent, P_EntityStore *store)
    store->magBolt  = ent.magBolt;
    store->health   = ent.health > 0 ? ent.health : 100;
    store->mana     = ent.mana;
+   store->statCHA  = ent.statCHA;
    store->statEND  = ent.statEND;
    store->statINT  = ent.statINT;
+   store->statSTR  = ent.statSTR;
    store->statVIT  = ent.statVIT;
    store->statWIS  = ent.statWIS;
+}
+
+//
+// P_EntityStore_Level
+//
+unsigned P_EntityStore_Level(P_EntityStore *store)
+{
+   return
+      store->gunFast +
+      store->gunHard +
+      store->gunWide +
+
+      store->magBolt +
+
+      store->statCHA +
+      store->statEND +
+      store->statINT +
+      store->statSTR +
+      store->statVIT +
+      store->statWIS;
 }
 
 // EOF

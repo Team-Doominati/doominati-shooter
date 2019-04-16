@@ -1,3 +1,4 @@
+level 4
 name CRIMEBOX
 next map06
 size 35 23

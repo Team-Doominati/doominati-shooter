@@ -25,6 +25,20 @@ extern unsigned R_CharTabS[256];
 
 extern unsigned R_TexEntity_Missile;
 extern unsigned R_TexEntity_Mobj;
+extern unsigned R_TexEntity_Rank;
+
+extern unsigned R_TexGUI_EdgeBL;
+extern unsigned R_TexGUI_EdgeBR;
+extern unsigned R_TexGUI_EdgeBT;
+extern unsigned R_TexGUI_EdgeLB;
+extern unsigned R_TexGUI_EdgeLR;
+extern unsigned R_TexGUI_EdgeLT;
+extern unsigned R_TexGUI_EdgeRB;
+extern unsigned R_TexGUI_EdgeRL;
+extern unsigned R_TexGUI_EdgeRT;
+extern unsigned R_TexGUI_EdgeTB;
+extern unsigned R_TexGUI_EdgeTL;
+extern unsigned R_TexGUI_EdgeTR;
 
 extern unsigned R_TexGUI_Icon_Blank;
 
@@ -60,10 +74,23 @@ extern unsigned R_TexTile_Wall;
 
 void R_DrawCharL(int x, int y, char c);
 void R_DrawCharS(int x, int y, char c);
+
+void R_DrawCharsL(int x, int y, char const *s);
+void R_DrawCharsS(int x, int y, char const *s);
+
 void R_DrawDigitsL_U(int x, int y, int w, unsigned i);
 void R_DrawDigitsS_U(int x, int y, int w, unsigned i);
 
-void R_DrawTex(unsigned tex, int x, int y, int w, int h);
+void R_DrawFormatL(int x, int y, char const *format, ...);
+void R_DrawFormatS(int x, int y, char const *format, ...);
+
+void R_DrawHudEdit(int x, int y);
+void R_DrawHudInfo(int x, int y);
+void R_DrawHudLive(void);
+void R_DrawHudMain(int x, int y, int w);
+void R_DrawHudShop(void);
+
+void R_DrawTex(int x, int y, unsigned tex, int w, int h);
 
 void R_Init(void);
 void R_Task(void);

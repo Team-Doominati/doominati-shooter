@@ -71,7 +71,12 @@ void P_Task(void)
             --P_MapCur->respT;
       }
       else
+      {
          P_MapCur->respT = P_Map_RespDelay;
+
+         if(DGE_Input_GetButton(0, M_Bind_Wiz) == DGE_Button_Down)
+            P_StateCur = P_State_Shop;
+      }
 
       if(P_Map_InExit(P_MapCur) && P_MapCur->next[0])
       {
@@ -88,16 +93,16 @@ void P_Task(void)
       else if(P_MapCur->nextT < P_Map_NextDelay)
          ++P_MapCur->nextT;
 
-      if(DGE_Input_GetButton(0, M_Bind_Wiz) == DGE_Button_Down)
-         P_StateCur = P_State_Shop;
-
       if(DGE_Input_GetButton(0, M_Bind_Halt) == DGE_Button_Down)
          P_StateCur = P_State_Halt;
 
       break;
 
    case P_State_Shop:
-      P_ShopTask();
+      if(P_Player.id)
+         P_ShopTask();
+      else
+         P_StateCur = P_State_Live;
 
       if(DGE_Input_GetButton(0, M_Bind_Wiz) == DGE_Button_Down)
          P_StateCur = P_State_Live;

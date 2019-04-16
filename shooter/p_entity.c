@@ -21,7 +21,7 @@ P_Entity P_Player;
 
 P_EntityStore P_PlayerStore =
 {
-   .ammo = 100,
+   .ammo = 200,
 
    .attack1 = P_Attack_Fast,
    .attack2 = P_Attack_Bolt,
@@ -47,11 +47,39 @@ unsigned P_Entity_AmmoMax(P_Entity ent)
 }
 
 //
+// P_Entity_FindAtPoint
+//
+P_Entity P_Entity_FindAtPoint(DGE_Fixed x, DGE_Fixed y)
+{
+   unsigned find = DGE_BlockMap_Find(x, y, x, y);
+
+   P_Entity ent;
+   for(unsigned thC = DGE_BlockMap_FindCountThinker(find); thC--;)
+   {
+      ent.id = DGE_Object_Cast(DGE_BlockMap_FindGetThinker(find, thC), DGE_OT_Entity);
+      if(ent.emc != P_EntityMemMax) {ent.id = 0; continue;}
+
+      if(ent.x - ent.sx > x || x > ent.x + ent.sx ||
+         ent.y - ent.sy > y || y > ent.y + ent.sy)
+         {ent.id = 0; continue;}
+
+      break;
+   }
+
+   DGE_BlockMap_FindFree(find);
+
+   return ent;
+}
+
+//
 // P_Entity_HealthMax
 //
 unsigned P_Entity_HealthMax(P_Entity ent)
 {
-   return 100 + ent.statEND * 20;
+   int max = 100 + ent.statEND * 20;
+   if(ent.team == P_TeamEnemy.id)
+      max /= 2;
+   return max;
 }
 
 //

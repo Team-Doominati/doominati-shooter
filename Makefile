@@ -43,6 +43,7 @@ shooter_IR = \
 	build/ir/shooter/p_shop.ir \
 	build/ir/shooter/p_spawn.ir \
 	build/ir/shooter/p_think.ir \
+	build/ir/shooter/r_hud.ir \
 	build/ir/shooter/r_main.ir \
 	build/ir/shooter/r_text.ir
 
@@ -75,7 +76,9 @@ build/data/boot/gamedefs: gamedefs.txt | build/data/boot
 shooter_gfx = \
 	build/data/gfx/Entity/Missile.png \
 	build/data/gfx/Entity/Mobj.png \
+	build/data/gfx/Entity/Rank.png \
 	build/data/gfx/GUI/DigLarge/20.png \
+	build/data/gfx/GUI/DigLarge/-.png \
 	build/data/gfx/GUI/DigLarge/0.png \
 	build/data/gfx/GUI/DigLarge/1.png \
 	build/data/gfx/GUI/DigLarge/2.png \
@@ -105,7 +108,20 @@ shooter_gfx = \
 	build/data/gfx/GUI/DigSmall/8.png \
 	build/data/gfx/GUI/DigSmall/9.png \
 	build/data/gfx/GUI/DigSmall/C.png \
+	build/data/gfx/GUI/DigSmall/E.png \
 	build/data/gfx/GUI/DigSmall/L.png \
+	build/data/gfx/GUI/Edge/BL.png \
+	build/data/gfx/GUI/Edge/BR.png \
+	build/data/gfx/GUI/Edge/BT.png \
+	build/data/gfx/GUI/Edge/LB.png \
+	build/data/gfx/GUI/Edge/LR.png \
+	build/data/gfx/GUI/Edge/LT.png \
+	build/data/gfx/GUI/Edge/RB.png \
+	build/data/gfx/GUI/Edge/RL.png \
+	build/data/gfx/GUI/Edge/RT.png \
+	build/data/gfx/GUI/Edge/TB.png \
+	build/data/gfx/GUI/Edge/TL.png \
+	build/data/gfx/GUI/Edge/TR.png \
 	build/data/gfx/GUI/Icon/Blank.png \
 	build/data/gfx/GUI/Icon/GunFast.png \
 	build/data/gfx/GUI/Icon/GunSlow.png \
@@ -131,6 +147,7 @@ shooter_gfx_dir = \
 	build/data/gfx/Entity \
 	build/data/gfx/GUI/DigLarge \
 	build/data/gfx/GUI/DigSmall \
+	build/data/gfx/GUI/Edge \
 	build/data/gfx/GUI/Icon \
 	build/data/gfx/Tile
 
@@ -190,6 +207,9 @@ build/data/gfx/Tile: | build/data/gfx
 	mkdir $@
 
 build/data/gfx/GUI/Icon: | build/data/gfx/GUI
+	mkdir $@
+
+build/data/gfx/GUI/Edge: | build/data/gfx/GUI
 	mkdir $@
 
 build/data/gfx/GUI/DigSmall: | build/data/gfx/GUI

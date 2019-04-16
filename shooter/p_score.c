@@ -21,7 +21,7 @@
 // Extern Objects                                                             |
 //
 
-unsigned P_Score = 0;
+P_ScoreT P_Score = 0;
 
 
 //----------------------------------------------------------------------------|
@@ -31,24 +31,22 @@ unsigned P_Score = 0;
 //
 // ScoreAdd
 //
-static void ScoreAdd(unsigned score)
+static void ScoreAdd(P_ScoreT score)
 {
-   if(P_Score + score > P_ScoreMax)
+   if((P_Score += score) > P_ScoreMax)
       P_Score = P_ScoreMax;
-   else
-      P_Score += score;
 }
 
 //
 // ScoreAdder
 //
-DGE_Callback static void ScoreAdder(unsigned score)
+DGE_Callback static void ScoreAdder(P_ScoreT score)
 {
    for(; score && P_StateCur >= P_State_Live; DGE_Task_Sleep(0, 1))
    {
       if(P_StateCur > P_State_Live) continue;
 
-      unsigned add = score > 100 ? score / 100 : 1;
+      P_ScoreT add = score > 100 ? score / 100 : 1;
       ScoreAdd(add);
       score -= add;
    }
@@ -60,24 +58,22 @@ DGE_Callback static void ScoreAdder(unsigned score)
 //
 // ScoreSub
 //
-static void ScoreSub(unsigned score)
+static void ScoreSub(P_ScoreT score)
 {
-   if(P_Score < score)
-      P_Score = 0;
-   else
-      P_Score -= score;
+   if((P_Score -= score) < P_ScoreMin)
+      P_Score = P_ScoreMin;
 }
 
 //
 // ScoreSubber
 //
-DGE_Callback static void ScoreSubber(unsigned score)
+DGE_Callback static void ScoreSubber(P_ScoreT score)
 {
    for(; score && P_StateCur >= P_State_Live; DGE_Task_Sleep(0, 1))
    {
       if(P_StateCur > P_State_Live) continue;
 
-      unsigned sub = score > 100 ? score / 100 : 1;
+      P_ScoreT sub = score > 100 ? score / 100 : 1;
       ScoreSub(sub);
       score -= sub;
    }
@@ -94,7 +90,7 @@ DGE_Callback static void ScoreSubber(unsigned score)
 //
 // P_Score_Add
 //
-void P_Score_Add(unsigned score)
+void P_Score_Add(P_ScoreT score)
 {
    DGE_Task_Create(0, (DGE_CallbackType)ScoreAdder, score);
 }
@@ -102,7 +98,7 @@ void P_Score_Add(unsigned score)
 //
 // P_Score_Sub
 //
-void P_Score_Sub(unsigned score)
+void P_Score_Sub(P_ScoreT score)
 {
    DGE_Task_Create(0, (DGE_CallbackType)ScoreSubber, score);
 }
@@ -114,7 +110,7 @@ M_ShellDefn(Score)
 {
    if(argc == 2)
    {
-      long score = strtol(argv[1], NULL, 10);
+      P_ScoreT score = strtol(argv[1], NULL, 10);
       if(score < 0)
          P_Score_Sub(-score);
       else

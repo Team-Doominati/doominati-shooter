@@ -72,30 +72,6 @@ static unsigned P_EditTile_TexF;
 //
 
 //
-// P_EditHudCB
-//
-M_Callback("DrawPost") static void P_EditHudCB(void)
-{
-   if(P_StateCur != P_State_Edit) return;
-
-   DGE_Draw_SetColor(P_EditMobj_TexR, P_EditMobj_TexG, P_EditMobj_TexB);
-
-   if(P_EditMobj_Tex)
-      R_DrawTex(P_EditMobj_Tex, P_TileSize, 0, P_TileSize, P_TileSize);
-
-   DGE_Draw_SetColor(1.0ulr, 1.0ulr, 1.0ulr);
-
-   if(P_EditTile_TexF)
-      R_DrawTex(P_EditTile_TexF, 0, 0, P_TileSize, P_TileSize);
-
-   if(P_EditTile_TexC)
-      R_DrawTex(P_EditTile_TexC,0, 0, P_TileSize, P_TileSize);
-
-   R_DrawTex(R_TexTile_Edit, 0, 0, P_TileSize, P_TileSize);
-   R_DrawTex(R_TexTile_Edit, P_TileSize, 0, P_TileSize, P_TileSize);
-}
-
-//
 // P_EditMobj_Create
 //
 static unsigned P_EditMobj_Create(int x, int y)
@@ -344,6 +320,30 @@ M_Entry void P_EditTask(void)
    DGE_Object_RefSub(P_EditView.id);
 
    P_EditView.id = 0;
+}
+
+//
+// R_DrawHudEdit
+//
+void R_DrawHudEdit(int x, int y)
+{
+   if(P_StateCur != P_State_Edit) return;
+
+   DGE_Draw_SetColor(P_EditMobj_TexR, P_EditMobj_TexG, P_EditMobj_TexB);
+
+   if(P_EditMobj_Tex)
+      R_DrawTex(x + P_TileSize, y, P_EditMobj_Tex, P_TileSize, P_TileSize);
+
+   DGE_Draw_SetColor(1.0ulr, 1.0ulr, 1.0ulr);
+
+   if(P_EditTile_TexF)
+      R_DrawTex(x, y, P_EditTile_TexF, P_TileSize, P_TileSize);
+
+   if(P_EditTile_TexC)
+      R_DrawTex(x, y, P_EditTile_TexC, P_TileSize, P_TileSize);
+
+   R_DrawTex(x,              y, R_TexTile_Edit, P_TileSize, P_TileSize);
+   R_DrawTex(x + P_TileSize, y, R_TexTile_Edit, P_TileSize, P_TileSize);
 }
 
 //

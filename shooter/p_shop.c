@@ -25,7 +25,7 @@
 #define P_ShopItem_ActionDef(name, mem, inc, max) \
    static void P_Action_##name(P_Entity ent) \
    { \
-      unsigned cost = P_Cost_##name(ent); \
+      P_ScoreT cost = P_Cost_##name(ent); \
       \
       if(P_Score < cost || ent.mem >= (max)) return; \
       \
@@ -37,9 +37,9 @@
 // P_ShopItem_CostDef
 //
 #define P_ShopItem_CostDef(name, mem, mul, pct) \
-static unsigned P_Cost_##name(P_Entity ent) \
+static P_ScoreT P_Cost_##name(P_Entity ent) \
    { \
-      return P_CostMul(M_Fib(ent.mem) * (mul), pct, ent.statCHA);\
+      return P_CostMul((ent.mem + 1) * (mul), pct, ent.statCHA);\
    }
 
 //
@@ -48,7 +48,7 @@ static unsigned P_Cost_##name(P_Entity ent) \
 #define P_ShopItem_Decl(name) \
    static void P_Action_##name(P_Entity ent); \
    static bool P_Cond_##name(P_Entity ent); \
-   static unsigned P_Cost_##name(P_Entity ent); \
+   static P_ScoreT P_Cost_##name(P_Entity ent); \
    static unsigned P_Level_##name(P_Entity ent)
 
 
@@ -64,7 +64,7 @@ typedef struct P_ShopItem
    void       (*action)(P_Entity ent);
    P_AttackFunc attack;
    P_CondFunc   cond;
-   unsigned   (*cost)(P_Entity ent);
+   P_ScoreT   (*cost)(P_Entity ent);
    unsigned   (*level)(P_Entity ent);
    DGE_Unsig    icon;
 } P_ShopItem;
@@ -149,7 +149,7 @@ static P_ShopItem P_ShopItems[] =
 // Static Functions                                                           |
 //
 
-static unsigned P_CostMul(unsigned cost, unsigned pct, unsigned n);
+static P_ScoreT P_CostMul(P_ScoreT cost, unsigned pct, unsigned n);
 
 //
 // P_Action_*
@@ -175,9 +175,9 @@ static bool P_Cond_GunWide(P_Entity ent) {return ent.gunWide;}
 //
 // P_Cost_*
 //
-static unsigned P_Cost_BuyAmmo(P_Entity ent)
+static P_ScoreT P_Cost_BuyAmmo(P_Entity ent)
    {return P_CostMul(P_CostMul(100, 105, P_Entity_Level(ent)), 90, ent.statCHA);}
-static unsigned P_Cost_BuyHeal(P_Entity ent)
+static P_ScoreT P_Cost_BuyHeal(P_Entity ent)
    {return P_CostMul(P_CostMul(100, 101, P_Entity_Level(ent)), 98, ent.statCHA);}
 P_ShopItem_CostDef(GunFast, gunFast, 1000, 99)
 P_ShopItem_CostDef(GunHard, gunHard, 1000, 99)
@@ -193,7 +193,7 @@ P_ShopItem_CostDef(StatWIS, statWIS, 1000, 99)
 //
 // P_CostMul
 //
-static unsigned P_CostMul(unsigned cost, unsigned pct, unsigned n)
+static P_ScoreT P_CostMul(P_ScoreT cost, unsigned pct, unsigned n)
 {
    while(n--) cost = cost * pct/100;
    return cost;
@@ -214,71 +214,6 @@ static unsigned P_Level_StatINT(P_Entity ent) {return ent.statINT;}
 static unsigned P_Level_StatSTR(P_Entity ent) {return ent.statSTR;}
 static unsigned P_Level_StatVIT(P_Entity ent) {return ent.statVIT;}
 static unsigned P_Level_StatWIS(P_Entity ent) {return ent.statWIS;}
-
-//
-// P_ShopHudCB
-//
-M_Callback("DrawPost") static void P_ShopHudCB(void)
-{
-   if(P_StateCur != P_State_Shop) return;
-
-   int xl = M_ScreenW / 2 - 590;
-   int xu = xl + 1200;
-   int yl = 80;
-   int yu = yl + 360;
-
-   P_ShopItem *item = P_ShopItems;
-
-   DGE_Texture_Bind(0);
-   DGE_Draw_SetColor(0.25ulr, 0.25ulr, 0.25ulr);
-   DGE_Draw_Rectangle(xl - 8, yl - 8, xu - 12, yu);
-
-   DGE_Draw_SetColor(0.0ulr, 1.0ulr, 0.0ulr);
-   R_DrawCharL(M_ScreenW / 2 - 40, 0, 'S');
-   R_DrawCharL(M_ScreenW / 2 - 20, 0, 'H');
-   R_DrawCharL(M_ScreenW / 2 + 00, 0, 'O');
-   R_DrawCharL(M_ScreenW / 2 + 20, 0, 'P');
-
-   for(int y = yl; y != yu; y += 120)
-      for(int x = xl; x != xu; x += 100, ++item)
-   {
-      if(!item->attack || item->cond(P_Player))
-         DGE_Draw_SetColor(1.0ulr, 1.0ulr, 1.0ulr);
-      else
-         DGE_Draw_SetColor(0.5ulr, 0.5ulr, 0.5ulr);
-
-      R_DrawTex(item->icon, x, y, 80, 80);
-
-      if(item->attack)
-      {
-         if(P_Player.attack1 == item->attack)
-            R_DrawTex(R_TexGUI_Icon_Select1, x, y, 80, 80);
-
-         if(P_Player.attack2 == item->attack)
-            R_DrawTex(R_TexGUI_Icon_Select2, x, y, 80, 80);
-      }
-
-      if(item->level)
-      {
-         unsigned level = item->level(P_Player);
-
-         DGE_Draw_SetColor(1.0ulr, 1.0ulr, 1.0ulr);
-         R_DrawDigitsS_U(x + 40, y + 80, 4, level);
-      }
-
-      if(item->cost)
-      {
-         unsigned cost = item->cost(P_Player);
-
-         if(cost <= P_Score)
-            DGE_Draw_SetColor(1.0ulr, 1.0ulr, 1.0ulr);
-         else
-            DGE_Draw_SetColor(1.0ulr, 0.0ulr, 0.0ulr);
-
-         R_DrawDigitsS_U(x, y + 96, 8, cost);
-      }
-   }
-}
 
 
 //----------------------------------------------------------------------------|
@@ -358,13 +293,15 @@ void P_ShopTask(void)
    // Look for shop item under cursor.
    P_ShopItem *item;
 
-        if(cursor.y <  80) item = NULL;
-   else if(cursor.y < 160) item = P_ShopItems +  0;
-   else if(cursor.y < 200) item = NULL;
-   else if(cursor.y < 280) item = P_ShopItems + 12;
-   else if(cursor.y < 320) item = NULL;
-   else if(cursor.y < 400) item = P_ShopItems + 24;
-   else                    item = NULL;
+   int yl = M_ScreenH / 2 - 180;
+
+        if(cursor.y < yl)       item = NULL;
+   else if(cursor.y < yl +  80) item = P_ShopItems +  0;
+   else if(cursor.y < yl + 120) item = NULL;
+   else if(cursor.y < yl + 200) item = P_ShopItems + 12;
+   else if(cursor.y < yl + 240) item = NULL;
+   else if(cursor.y < yl + 320) item = P_ShopItems + 24;
+   else                         item = NULL;
 
    if(item)
    {
@@ -386,6 +323,92 @@ void P_ShopTask(void)
 
    if(item->action)
       if(btnU) item->action(P_Player);
+}
+
+//
+// R_DrawHudShop
+//
+void R_DrawHudShop(void)
+{
+   int xl = M_ScreenW / 2 - 590;
+   int xu = xl + 1200;
+   int yl = M_ScreenH / 2 - 180;
+   int yu = yl + 360;
+
+   P_ShopItem *item = P_ShopItems;
+
+   R_DrawTex(xl - 16, yl - 16, R_TexGUI_EdgeRB,    8,   8);
+   R_DrawTex(xl - 16, yl -  8, R_TexGUI_EdgeTB,    8, 368);
+   R_DrawTex(xl - 16, yu,      R_TexGUI_EdgeTR,    8,   8);
+   R_DrawTex(xl -  8, yu,      R_TexGUI_EdgeLR, 1196,   8);
+   R_DrawTex(xu - 12, yu,      R_TexGUI_EdgeLT,    8,   8);
+   R_DrawTex(xu - 12, yl -  8, R_TexGUI_EdgeBT,    8, 368);
+   R_DrawTex(xu - 12, yl - 16, R_TexGUI_EdgeBL,    8,   8);
+   R_DrawTex(xl -  8, yl - 16, R_TexGUI_EdgeRL, 1196,   8);
+
+   DGE_Texture_Bind(0);
+   DGE_Draw_SetColor(0.125ulr, 0.125ulr, 0.125ulr);
+   DGE_Draw_Rectangle(xl - 8, yl - 8, xu - 12, yu);
+
+   for(int y = yl; y != yu; y += 120)
+      for(int x = xl; x != xu; x += 100, ++item)
+   {
+      if(!item->attack || item->cond(P_Player))
+         DGE_Draw_SetColor(1.0ulr, 1.0ulr, 1.0ulr);
+      else
+         DGE_Draw_SetColor(0.5ulr, 0.5ulr, 0.5ulr);
+
+      R_DrawTex(x, y, item->icon, 80, 80);
+
+      if(item->attack)
+      {
+         if(P_Player.attack1 == item->attack)
+            R_DrawTex(x, y, R_TexGUI_Icon_Select1, 80, 80);
+
+         if(P_Player.attack2 == item->attack)
+            R_DrawTex(x, y, R_TexGUI_Icon_Select2, 80, 80);
+      }
+
+      if(item->level)
+      {
+         unsigned level = item->level(P_Player);
+
+         DGE_Draw_SetColor(1.0ulr, 1.0ulr, 1.0ulr);
+         R_DrawFormatS(x + 40, y + 80, "%04u", level);
+      }
+
+      if(item->cost)
+      {
+         P_ScoreT cost = item->cost(P_Player);
+
+         if(cost <= P_Score)
+            DGE_Draw_SetColor(1.0ulr, 1.0ulr, 1.0ulr);
+         else
+            DGE_Draw_SetColor(1.0ulr, 0.0ulr, 0.0ulr);
+
+         if(cost <= 99999999)
+         {
+            R_DrawFormatS(x, y + 96, "%08u", (unsigned)cost);
+            R_DrawDigitsS_U(x, y + 96, 8, cost);
+         }
+         else if(cost <= 999999999999999)
+         {
+            unsigned exp = 2;
+            for(cost /= 100; cost > 999999;)
+               cost /= 10, ++exp;
+
+            R_DrawFormatS(x, y + 96, "%06uE%01u", (unsigned)cost, exp);
+         }
+         else
+         {
+            unsigned exp = 11;
+            for(cost /= 100000000000; cost > 99999;)
+               cost /= 10, ++exp;
+
+            R_DrawFormatS(x, y + 96, "%05uE%02u", (unsigned)cost, exp);
+         }
+      }
+   }
 }
 
 // EOF

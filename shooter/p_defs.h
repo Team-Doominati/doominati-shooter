@@ -25,7 +25,8 @@
 #define P_Map_NextDelay 150
 #define P_Map_RespDelay 100
 
-#define P_ScoreMax 999999999
+#define P_ScoreMax 999999999999999999L
+#define P_ScoreMin -99999999999999999L
 
 #define P_TileSize 64
 
@@ -38,6 +39,8 @@ typedef struct P_Entity P_Entity;
 
 typedef unsigned (*P_AttackFunc)(P_Entity ent, float angle);
 typedef bool (*P_CondFunc)(P_Entity ent);
+
+typedef long P_ScoreT;
 
 //
 // P_EntityMem
@@ -179,7 +182,7 @@ extern P_Map *P_MapCur;
 extern P_Entity      P_Player;
 extern P_EntityStore P_PlayerStore;
 
-extern unsigned P_Score;
+extern P_ScoreT P_Score;
 
 extern P_State P_StateCur;
 
@@ -205,6 +208,8 @@ void P_EditQuit(void);
 M_Entry void P_EditTask(void);
 
 unsigned P_Entity_AmmoMax(P_Entity ent);
+
+P_Entity P_Entity_FindAtPoint(DGE_Fixed x, DGE_Fixed y);
 
 unsigned P_Entity_HealthMax(P_Entity ent);
 
@@ -232,8 +237,8 @@ void P_Map_Read(P_Map *map, FILE *in);
 void P_Map_ReadData(P_Map *map, char *data, FILE *in);
 bool P_Map_ReadHead(P_Map *map, FILE *in);
 
-void P_Score_Add(unsigned score);
-void P_Score_Sub(unsigned score);
+void P_Score_Add(P_ScoreT score);
+void P_Score_Sub(P_ScoreT score);
 
 void P_ShopInit(void);
 void P_ShopQuit(void);

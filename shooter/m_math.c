@@ -20,13 +20,11 @@
 //
 // M_Fib
 //
-unsigned M_Fib(unsigned i)
+unsigned long M_Fib(unsigned i)
 {
    if(i <= 1) return 1;
 
-   unsigned prev = 1;
-   unsigned curr = 1;
-   unsigned next;
+   unsigned long prev = 1, curr = 1, next;
 
    while(--i)
    {

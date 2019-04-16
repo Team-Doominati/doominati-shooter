@@ -77,12 +77,13 @@ unsigned P_SpawnEnemy(int x, int y)
 
    // Allocate stats.
    unsigned level = P_MapCur->level;
+   for(int i = 8; i-- && rand() > RAND_MAX / 3;) ++level;
    ent.statEND = level / 2; level -= ent.statEND;
    ent.statVIT = level / 3; level -= ent.statVIT;
    ent.gunFast = level / 1; level -= ent.gunFast;
 
    // Calculate stat-based values.
-   ent.health = P_Entity_HealthMax(ent) / 2;
+   ent.health = P_Entity_HealthMax(ent);
 
    DGE_PhysicsThinker_Block(ent.id);
 

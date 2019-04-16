@@ -142,7 +142,7 @@ extern int M_ScreenW;
 // Extern Functions                                                           |
 //
 
-extern unsigned M_Fib(unsigned i);
+extern unsigned long M_Fib(unsigned i);
 
 
 #endif//M_DEFS_H__

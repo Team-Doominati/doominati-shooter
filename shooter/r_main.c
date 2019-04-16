@@ -22,6 +22,20 @@ unsigned R_CharTabS[256];
 
 unsigned R_TexEntity_Missile;
 unsigned R_TexEntity_Mobj;
+unsigned R_TexEntity_Rank;
+
+unsigned R_TexGUI_EdgeBL;
+unsigned R_TexGUI_EdgeBR;
+unsigned R_TexGUI_EdgeBT;
+unsigned R_TexGUI_EdgeLB;
+unsigned R_TexGUI_EdgeLR;
+unsigned R_TexGUI_EdgeLT;
+unsigned R_TexGUI_EdgeRB;
+unsigned R_TexGUI_EdgeRL;
+unsigned R_TexGUI_EdgeRT;
+unsigned R_TexGUI_EdgeTB;
+unsigned R_TexGUI_EdgeTL;
+unsigned R_TexGUI_EdgeTR;
 
 unsigned R_TexGUI_Icon_Blank;
 
@@ -52,134 +66,6 @@ unsigned R_TexTile_Wall;
 
 
 //----------------------------------------------------------------------------|
-// Static Functions                                                           |
-//
-
-//
-// DrawHudCB
-//
-M_Callback("DrawPost") static void DrawHudCB(void)
-{
-   if(P_StateCur < P_State_Live) return;
-
-   // Draw health.
-
-   int health = P_Player.id ? P_Player.health : 0;
-   if(health <   0) health =   0;
-   if(health > 999) health = 999;
-
-   DGE_Draw_SetColor(0.0ulr, 1.0ulr, 0.0ulr);
-
-   R_DrawCharL( 0, 0, 'H');
-   R_DrawCharL(20, 0, 'P');
-
-   R_DrawDigitsL_U(40, 0, 3, health);
-
-   DGE_Draw_SetColor(1.0ulr, 1.0ulr, 1.0ulr);
-
-   R_DrawCharL(100, 0, ' ');
-
-   // Draw ammo.
-
-   unsigned ammo = P_Player.id ? P_Player.ammo : 0;
-   if(ammo > 9999) ammo = 9999;
-
-   DGE_Draw_SetColor(1.0ulr, 1.0ulr, 0.0ulr);
-
-   R_DrawCharL(120, 0, 'A');
-   R_DrawCharL(140, 0, 'P');
-
-   R_DrawDigitsL_U(160, 0, 4, ammo);
-
-   // Draw level.
-
-   unsigned level = P_Player.id ? P_Entity_Level(P_Player) : 0;
-   if(level > 9999) level = 9999;
-
-   DGE_Draw_SetColor(1.0ulr, 1.0ulr, 1.0ulr);
-
-   R_DrawCharL(0, 32, 'L');
-
-   R_DrawDigitsL_U(20, 32, 4, level);
-
-   DGE_Draw_SetColor(1.0ulr, 1.0ulr, 1.0ulr);
-
-   R_DrawCharL(100, 32, ' ');
-
-   // Draw mana.
-
-   unsigned mana = P_Player.id ? P_Player.mana : 0;
-   if(mana > 9999) mana = 9999;
-
-   DGE_Draw_SetColor(0.0ulr, 1.0ulr, 1.0ulr);
-
-   R_DrawCharL(120, 32, 'S');
-   R_DrawCharL(140, 32, 'P');
-
-   R_DrawDigitsL_U(160, 32, 4, mana);
-
-   // Draw score.
-
-   DGE_Draw_SetColor(1.0ulr, 1.0ulr, 1.0ulr);
-   R_DrawCharL(M_ScreenW - 220, 0, 'S');
-   R_DrawCharL(M_ScreenW - 200, 0, 'C');
-   R_DrawDigitsL_U(M_ScreenW - 180, 0, 9, P_Score);
-
-   // Draw enemy count.
-
-   size_t mobjC = P_MapCur->mobjC;
-   if(mobjC > 9999) mobjC = 9999;
-
-   DGE_Draw_SetColor(1.0ulr, 0.0ulr, 0.0ulr);
-   R_DrawCharL(M_ScreenW - 120, 32, 'E');
-   R_DrawCharL(M_ScreenW - 100, 32, 'C');
-   R_DrawDigitsL_U(M_ScreenW - 80, 32, 4, mobjC);
-
-   DGE_Draw_SetColor(1.0ulr, 0.0ulr, 0.0ulr);
-   R_DrawCharL(M_ScreenW - 140, 32, ' ');
-
-   // Draw enemy level.
-
-   level = P_MapCur->level;
-   if(level > 9999) level = 9999;
-
-   DGE_Draw_SetColor(1.0ulr, 0.0ulr, 0.0ulr);
-   R_DrawCharL(M_ScreenW - 260, 32, 'E');
-   R_DrawCharL(M_ScreenW - 240, 32, 'L');
-   R_DrawDigitsL_U(M_ScreenW - 220, 32, 4, level);
-
-   // Draw respawn time.
-
-   if(P_MapCur->respT < P_Map_RespDelay)
-   {
-      DGE_Draw_SetColor(1.0ulr, 0.0ulr, 0.0ulr);
-      R_DrawDigitsL_U(M_ScreenW / 2 - 40, 32, 4, P_MapCur->respT);
-   }
-
-   // Draw next map time.
-
-   if(P_MapCur->nextT < P_Map_NextDelay)
-   {
-      DGE_Draw_SetColor(0.0ulr, 1.0ulr, 0.0ulr);
-      R_DrawDigitsL_U(M_ScreenW / 2 - 40, 32, 4, P_MapCur->nextT);
-   }
-
-   // Draw pause indicator.
-   if(P_StateCur == P_State_Halt)
-   {
-      int x = M_ScreenW / 2 - 50;
-
-      DGE_Draw_SetColor(0.0ulr, 1.0ulr, 0.0ulr);
-      R_DrawCharL(x +  0, 0, 'P');
-      R_DrawCharL(x + 20, 0, 'A');
-      R_DrawCharL(x + 40, 0, 'U');
-      R_DrawCharL(x + 60, 0, 'S');
-      R_DrawCharL(x + 80, 0, 'E');
-   }
-}
-
-
-//----------------------------------------------------------------------------|
 // Extern Functions                                                           |
 //
 
@@ -189,6 +75,8 @@ M_Callback("DrawPost") static void DrawHudCB(void)
 void R_Init(void)
 {
    R_CharTabL[' '] = DGE_Texture_Get(M_Str("@gfx/GUI/DigLarge/20.png"));
+
+   R_CharTabL['-'] = DGE_Texture_Get(M_Str("@gfx/GUI/DigLarge/-.png"));
 
    R_CharTabL['0'] = DGE_Texture_Get(M_Str("@gfx/GUI/DigLarge/0.png"));
    R_CharTabL['1'] = DGE_Texture_Get(M_Str("@gfx/GUI/DigLarge/1.png"));
@@ -225,6 +113,7 @@ void R_Init(void)
    R_CharTabS['8'] = DGE_Texture_Get(M_Str("@gfx/GUI/DigSmall/8.png"));
    R_CharTabS['9'] = DGE_Texture_Get(M_Str("@gfx/GUI/DigSmall/9.png"));
    R_CharTabS['C'] = DGE_Texture_Get(M_Str("@gfx/GUI/DigSmall/C.png"));
+   R_CharTabS['E'] = DGE_Texture_Get(M_Str("@gfx/GUI/DigSmall/E.png"));
    R_CharTabS['I'] = R_CharTabS['1'];
    R_CharTabS['L'] = DGE_Texture_Get(M_Str("@gfx/GUI/DigSmall/L.png"));
    R_CharTabS['O'] = R_CharTabS['0'];
@@ -232,6 +121,20 @@ void R_Init(void)
 
    R_TexEntity_Missile = DGE_Texture_Get(M_Str("@gfx/Entity/Missile.png"));
    R_TexEntity_Mobj    = DGE_Texture_Get(M_Str("@gfx/Entity/Mobj.png"));
+   R_TexEntity_Rank    = DGE_Texture_Get(M_Str("@gfx/Entity/Rank.png"));
+
+   R_TexGUI_EdgeBL = DGE_Texture_Get(M_Str("@gfx/GUI/Edge/BL.png"));
+   R_TexGUI_EdgeBR = DGE_Texture_Get(M_Str("@gfx/GUI/Edge/BR.png"));
+   R_TexGUI_EdgeBT = DGE_Texture_Get(M_Str("@gfx/GUI/Edge/BT.png"));
+   R_TexGUI_EdgeLB = DGE_Texture_Get(M_Str("@gfx/GUI/Edge/LB.png"));
+   R_TexGUI_EdgeLR = DGE_Texture_Get(M_Str("@gfx/GUI/Edge/LR.png"));
+   R_TexGUI_EdgeLT = DGE_Texture_Get(M_Str("@gfx/GUI/Edge/LT.png"));
+   R_TexGUI_EdgeRB = DGE_Texture_Get(M_Str("@gfx/GUI/Edge/RB.png"));
+   R_TexGUI_EdgeRL = DGE_Texture_Get(M_Str("@gfx/GUI/Edge/RL.png"));
+   R_TexGUI_EdgeRT = DGE_Texture_Get(M_Str("@gfx/GUI/Edge/RT.png"));
+   R_TexGUI_EdgeTB = DGE_Texture_Get(M_Str("@gfx/GUI/Edge/TB.png"));
+   R_TexGUI_EdgeTL = DGE_Texture_Get(M_Str("@gfx/GUI/Edge/TL.png"));
+   R_TexGUI_EdgeTR = DGE_Texture_Get(M_Str("@gfx/GUI/Edge/TR.png"));
 
    R_TexGUI_Icon_Blank = DGE_Texture_Get(M_Str("@gfx/GUI/Icon/Blank.png"));
 

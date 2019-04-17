@@ -243,19 +243,21 @@ void R_DrawHudLive(void)
          DGE_Draw_Rectangle(x + pct, y, x + w, y + 4);
       }
 
-      unsigned level;
-      if(ent.team == P_TeamEnemy.id && (level = P_Entity_Level(ent)) > P_MapCur->level)
+      if(ent.team == P_TeamEnemy.id)
       {
-         unsigned diff = level - P_MapCur->level;
-
          int x = ent.x - 6 - view.x + 0.5hk;
          int y = ent.y   -   view.y + 0.5hk;
 
          DGE_Draw_SetColor(1.00ulr, 0.50ulr, 0.50ulr);
-         if(diff >= 8) R_DrawTex(x, y - 11, R_TexEntity_Rank, 12, 6);
-         if(diff >= 7) R_DrawTex(x, y -  6, R_TexEntity_Rank, 12, 6);
-         if(diff >= 5) R_DrawTex(x, y -  1, R_TexEntity_Rank, 12, 6);
-         if(diff >= 1) R_DrawTex(x, y +  4, R_TexEntity_Rank, 12, 6);
+         switch(P_Entity_Rank(ent))
+         {
+         default:
+         case 4: R_DrawTex(x, y - 11, R_TexEntity_Rank, 12, 6);
+         case 3: R_DrawTex(x, y -  6, R_TexEntity_Rank, 12, 6);
+         case 2: R_DrawTex(x, y -  1, R_TexEntity_Rank, 12, 6);
+         case 1: R_DrawTex(x, y +  4, R_TexEntity_Rank, 12, 6);
+         case 0: break;
+         }
       }
    }
 

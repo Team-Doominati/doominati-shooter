@@ -111,6 +111,25 @@ unsigned P_Entity_ManaMax(P_Entity ent)
 }
 
 //
+// P_Entity_Rank
+//
+unsigned P_Entity_Rank(P_Entity ent)
+{
+   unsigned level = P_Entity_Level(ent);
+   if(level <= P_MapCur->level)
+      return 0;
+
+   switch(level - P_MapCur->level)
+   {
+   case 1: case 2: case 3: case 4: return 1;
+   case 5: case 6:                 return 2;
+   case 7:                         return 3;
+   case 8:                         return 4;
+   default:                        return 5;
+   }
+}
+
+//
 // P_Entity_Regen
 //
 void P_Entity_Regen(P_Entity ent)
@@ -121,7 +140,7 @@ void P_Entity_Regen(P_Entity ent)
 
       while(ent.healFrac >= 250)
       {
-         ent.healFrac = ent.healFrac - 50;
+         ent.healFrac = ent.healFrac - 250;
          ent.health   = ent.health + 1;
       }
    }
@@ -134,7 +153,7 @@ void P_Entity_Regen(P_Entity ent)
 
       while(ent.manaFrac >= 100)
       {
-         ent.manaFrac = ent.manaFrac - 50;
+         ent.manaFrac = ent.manaFrac - 100;
          ent.mana     = ent.mana + 1;
       }
    }

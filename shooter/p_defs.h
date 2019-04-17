@@ -217,6 +217,8 @@ unsigned P_Entity_Level(P_Entity ent);
 
 unsigned P_Entity_ManaMax(P_Entity ent);
 
+unsigned P_Entity_Rank(P_Entity ent);
+
 void P_Entity_Regen(P_Entity ent);
 
 void P_Entity_StoreLoad(P_Entity ent, P_EntityStore const *store);

@@ -47,12 +47,14 @@ M_Entry void P_Think_Enemy(P_Entity ent)
       if(!P_Player.id) continue;
 
       float angle = atan2f(P_Player.y - ent.y, P_Player.x - ent.x);
-      sincosf(angle, &y, &x);
 
-      if(abshk(ent.vx) + abshk(ent.vy) < 12)
+      if(abshk(ent.vx) + abshk(ent.vy) < P_Entity_Rank(ent) * 1.5hk + 6)
       {
-         ent.vx = ent.vx + (short accum)x * 0.5hk;
-         ent.vy = ent.vy + (short accum)y * 0.5hk;
+         DGE_Fixed accel = 0.25hk;
+         if(ent.x < P_Player.x) ent.vx = ent.vx + accel;
+         if(ent.x > P_Player.x) ent.vx = ent.vx - accel;
+         if(ent.y < P_Player.y) ent.vy = ent.vy + accel;
+         if(ent.y > P_Player.y) ent.vy = ent.vy - accel;
       }
 
       ent.ammo = 100;
@@ -73,7 +75,8 @@ M_Entry void P_Think_Player(P_Entity ent)
 {
    DGE_Object_RefAdd(ent.id);
 
-   unsigned cooldown = 0;
+   unsigned cooldown1 = 0;
+   unsigned cooldown2 = 0;
 
    float x, y;
 
@@ -99,13 +102,14 @@ M_Entry void P_Think_Player(P_Entity ent)
       DGE_Point2I cursor = DGE_Input_GetCursor(0);
       float angle = atan2f(cursor.y - M_ScreenH / 2, cursor.x - M_ScreenW / 2);
 
-      if(!cooldown && (DGE_Input_GetButton(0, M_Bind_Atk) & DGE_Button_Down))
-         cooldown = ent.attack1(ent, angle);
+      if(!cooldown1 && (DGE_Input_GetButton(0, M_Bind_Atk) & DGE_Button_Down))
+         cooldown1 = ent.attack1(ent, angle);
 
-      if(!cooldown && (DGE_Input_GetButton(0, M_Bind_Alt) & DGE_Button_Down))
-         cooldown = ent.attack2(ent, angle);
+      if(!cooldown2 && (DGE_Input_GetButton(0, M_Bind_Alt) & DGE_Button_Down))
+         cooldown2 = ent.attack2(ent, angle);
 
-      if(cooldown) --cooldown;
+      if(cooldown1) --cooldown1;
+      if(cooldown2) --cooldown2;
    }
 
    // Sync to player store.

@@ -224,7 +224,7 @@ void P_EditInit(unsigned w, unsigned h)
 
    for(unsigned ty = 0; ty != h; ++ty) for(unsigned tx = 0; tx != w; ++tx)
    {
-      unsigned ti = ty * h + tx;
+      unsigned ti = ty * w + tx;
       unsigned x  = tx * P_TileSize;
       unsigned y  = ty * P_TileSize;
 
@@ -307,7 +307,7 @@ M_Entry void P_EditTask(void)
       case 'W': P_EditTile_TypeSet(' ', 0); break;
       }
 
-      if(0 <= x || tx < P_EditW || 0 <= y || ty < P_EditH)
+      if(0 <= x && tx < P_EditW && 0 <= y && ty < P_EditH)
       {
          if(btnMobj & DGE_Button_Down)
             P_EditMobj_TypeSet(0, P_EditMobjs[ty * P_EditW + tx].id);

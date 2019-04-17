@@ -142,7 +142,10 @@ extern int M_ScreenW;
 // Extern Functions                                                           |
 //
 
-extern unsigned long M_Fib(unsigned i);
+unsigned long M_Fib(unsigned i);
+
+bool M_LineBoxCollide2D(DGE_Fixed xl, DGE_Fixed yl, DGE_Fixed xu, DGE_Fixed yu,
+   DGE_Fixed x, DGE_Fixed y, DGE_Fixed dirx, DGE_Fixed diry);
 
 
 #endif//M_DEFS_H__

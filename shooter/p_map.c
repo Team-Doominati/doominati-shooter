@@ -115,6 +115,8 @@ static unsigned P_TileCreate_Wall(int tx, int ty)
 {
    P_Tile sec = {P_TileCreate(tx, ty)};
 
+   sec.type = 'W';
+
    sec.friction = 0.25ulr;
 
    sec.texf = R_TexTile_Wall;

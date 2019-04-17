@@ -70,6 +70,8 @@ typedef enum P_EntityMem
    P_EntityMem_StatVIT, // HP Regen
    P_EntityMem_StatWIS, // SP Max
 
+   P_EntityMem_Target,
+
    P_EntityMemMax
 } P_EntityMem;
 
@@ -120,6 +122,8 @@ struct P_Entity
 
    DGE_PropMem(unsigned, mana,     DGE_OME_Entity + P_EntityMem_Mana)
    DGE_PropMem(unsigned, manaFrac, DGE_OME_Entity + P_EntityMem_ManaFrac)
+
+   DGE_PropMem(unsigned, target, DGE_OME_Entity + P_EntityMem_Target)
 };
 
 //
@@ -220,6 +224,8 @@ unsigned P_Entity_ManaMax(P_Entity ent);
 unsigned P_Entity_Rank(P_Entity ent);
 
 void P_Entity_Regen(P_Entity ent);
+
+bool P_Entity_Sight(P_Entity from, P_Entity to);
 
 void P_Entity_StoreLoad(P_Entity ent, P_EntityStore const *store);
 void P_Entity_StoreSave(P_Entity ent, P_EntityStore *store);

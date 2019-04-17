@@ -162,6 +162,44 @@ void P_Entity_Regen(P_Entity ent)
 }
 
 //
+// P_Entity_Sight
+//
+bool P_Entity_Sight(P_Entity from, P_Entity to)
+{
+   bool res = true;
+
+   DGE_Fixed fxl, fxu, fyl, fyu;
+   if(from.x < to.x) {fxl = from.x; fxu = to.x;} else {fxu = from.x; fxl = to.x;}
+   if(from.y < to.y) {fyl = from.y; fyu = to.y;} else {fyu = from.y; fyl = to.y;}
+   unsigned find = DGE_BlockMap_Find(fxl, fyl, fxu, fyu);
+
+   // Calculate slope.
+   DGE_Fixed tox = to.x - from.x;
+   DGE_Fixed toy = to.y - from.y;
+   if(abshk(tox) < abshk(toy))
+      tox /= abshk(toy), toy = toy < 0 ? -1 : 1;
+   else
+      toy /= abshk(tox), tox = tox < 0 ? -1 : 1;
+
+   for(unsigned secC = DGE_BlockMap_FindCountSector(find); secC--;)
+   {
+      P_Tile tile = {DGE_BlockMap_FindGetSector(find, secC)};
+
+      if(tile.type != 'W') continue;
+
+      if(tile.xl > fxu || fxl > tile.xu || tile.yl > fyu || fyl > tile.yu)
+         continue;
+
+      if(M_LineBoxCollide2D(tile.xl, tile.yl, tile.xu, tile.yu, from.x, from.y, tox, toy))
+         {res = false; break;}
+   }
+
+   DGE_BlockMap_FindFree(find);
+
+   return res;
+}
+
+//
 // P_Entity_StoreLoad
 //
 void P_Entity_StoreLoad(P_Entity ent, P_EntityStore const *store)

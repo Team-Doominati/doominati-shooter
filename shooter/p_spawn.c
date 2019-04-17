@@ -83,7 +83,9 @@ unsigned P_SpawnEnemy(int x, int y)
    ent.gunFast = level / 1; level -= ent.gunFast;
 
    // Calculate stat-based values.
+   ent.ammo   = P_Entity_AmmoMax(ent);
    ent.health = P_Entity_HealthMax(ent);
+   ent.mana   = P_Entity_ManaMax(ent);
 
    DGE_PhysicsThinker_Block(ent.id);
 

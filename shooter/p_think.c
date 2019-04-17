@@ -44,27 +44,35 @@ M_Entry void P_Think_Enemy(P_Entity ent)
 
       P_Entity_Regen(ent);
 
-      if(!P_Player.id) continue;
+      if(!ent.target)
+      {
+         if(!P_Player.id || !P_Entity_Sight(ent, P_Player))
+            continue;
 
-      float angle = atan2f(P_Player.y - ent.y, P_Player.x - ent.x);
+         ent.target = P_Player.id;
+         DGE_Object_RefAdd(ent.target);
+      }
+
+      P_Entity target = {ent.target};
+
+      if(target.health < 0) {DGE_Object_RefSub(ent.target); ent.target = 0; continue;}
 
       if(abshk(ent.vx) + abshk(ent.vy) < P_Entity_Rank(ent) * 1.5hk + 6)
       {
          DGE_Fixed accel = 0.25hk;
-         if(ent.x < P_Player.x) ent.vx = ent.vx + accel;
-         if(ent.x > P_Player.x) ent.vx = ent.vx - accel;
-         if(ent.y < P_Player.y) ent.vy = ent.vy + accel;
-         if(ent.y > P_Player.y) ent.vy = ent.vy - accel;
+         if(ent.x < target.x) ent.vx = ent.vx + accel;
+         if(ent.x > target.x) ent.vx = ent.vx - accel;
+         if(ent.y < target.y) ent.vy = ent.vy + accel;
+         if(ent.y > target.y) ent.vy = ent.vy - accel;
       }
 
-      ent.ammo = 100;
-
-      if(!cooldown && rand() < RAND_MAX / 16)
-         cooldown = ent.attack1(ent, angle);
+      if(!cooldown && P_Entity_Sight(ent, target))
+         cooldown = ent.attack1(ent, atan2f(target.y - ent.y, target.x - ent.x));
 
       if(cooldown) --cooldown;
    }
 
+   if(ent.target) DGE_Object_RefSub(ent.target);
    DGE_Object_RefSub(ent.id);
 }
 

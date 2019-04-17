@@ -192,25 +192,29 @@ void R_DrawHudInfo(int x, int y)
 
    if(ent.id && ent.health > 0 && ent.team == P_TeamEnemy.id)
    {
+      unsigned ammo   = ent.ammo;
       int      health = ent.health;
       unsigned level  = P_Entity_Level(ent);
+      unsigned mana   = ent.mana;
 
+      if(ammo   > 9999) ammo   = 9999;
       if(health > 9999) health = 9999;
       if(level  > 9999) level  = 9999;
+      if(mana   > 9999) mana   = 9999;
 
-      R_DrawFormatL(x, y,      "HP%04u", health);
-      R_DrawFormatL(x, y + 32, "EL%04u", level);
+      R_DrawFormatL(x, y,      "HP%04u AP%04u", health, ammo);
+      R_DrawFormatL(x, y + 32, "EL%04u SP%04u", level,  mana);
    }
    else
    {
-      R_DrawCharsL(x, y,      "      ");
-      R_DrawCharsL(x, y + 32, "      ");
+      R_DrawCharsL(x, y,      "             ");
+      R_DrawCharsL(x, y + 32, "             ");
    }
 
    DGE_Draw_SetColor(1.0ulr, 1.0ulr, 1.0ulr);
-   R_DrawTex(x + 120, y,     R_TexGUI_EdgeBT,   8, 64);
-   R_DrawTex(x + 120, y - 8, R_TexGUI_EdgeBL,   8,  8);
-   R_DrawTex(x,       y - 8, R_TexGUI_EdgeRL, 120,  8);
+   R_DrawTex(x + 260, y,     R_TexGUI_EdgeBT,   8, 64);
+   R_DrawTex(x + 260, y - 8, R_TexGUI_EdgeBL,   8,  8);
+   R_DrawTex(x,       y - 8, R_TexGUI_EdgeRL, 260,  8);
 }
 
 //

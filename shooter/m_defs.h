@@ -147,6 +147,8 @@ unsigned long M_Fib(unsigned i);
 bool M_LineBoxCollide2D(DGE_Fixed xl, DGE_Fixed yl, DGE_Fixed xu, DGE_Fixed yu,
    DGE_Fixed x, DGE_Fixed y, DGE_Fixed dirx, DGE_Fixed diry);
 
+int M_Random(int min, int max);
+
 
 #endif//M_DEFS_H__
 

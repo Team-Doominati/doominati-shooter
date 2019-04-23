@@ -43,7 +43,9 @@ P_EntityStore P_PlayerStore =
 //
 unsigned P_Entity_AmmoMax(P_Entity ent)
 {
-   return 200 + ent.statSTR * 50;
+   int max = 200 + ent.statSTR * 50;
+   if(ent.team == P_TeamEnemy.id) max /= 5;
+   return max;
 }
 
 //
@@ -77,8 +79,7 @@ P_Entity P_Entity_FindAtPoint(DGE_Fixed x, DGE_Fixed y)
 unsigned P_Entity_HealthMax(P_Entity ent)
 {
    int max = 100 + ent.statEND * 20;
-   if(ent.team == P_TeamEnemy.id)
-      max /= 2;
+   if(ent.team == P_TeamEnemy.id) max /= 2;
    return max;
 }
 
@@ -107,7 +108,9 @@ unsigned P_Entity_Level(P_Entity ent)
 //
 unsigned P_Entity_ManaMax(P_Entity ent)
 {
-   return 100 + ent.statWIS * 20;
+   int max = 100 + ent.statWIS * 20;
+   if(ent.team == P_TeamEnemy.id) max /= 4;
+   return max;
 }
 
 //

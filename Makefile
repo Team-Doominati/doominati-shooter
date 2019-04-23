@@ -33,6 +33,7 @@ shooter_H = \
 shooter_IR = \
 	build/ir/shooter/m_main.ir \
 	build/ir/shooter/m_math.ir \
+	build/ir/shooter/m_random.ir \
 	build/ir/shooter/p_attack.ir \
 	build/ir/shooter/p_cond.ir \
 	build/ir/shooter/p_edit.ir \

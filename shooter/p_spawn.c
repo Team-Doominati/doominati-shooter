@@ -77,10 +77,15 @@ unsigned P_SpawnEnemy(int x, int y)
 
    // Allocate stats.
    unsigned level = P_MapCur->level;
-   for(int i = 8; i-- && rand() > RAND_MAX / 3;) ++level;
-   ent.statEND = level / 2; level -= ent.statEND;
-   ent.statVIT = level / 3; level -= ent.statVIT;
-   ent.gunFast = level / 1; level -= ent.gunFast;
+   for(int i = 8; i-- && !M_Random(0, 3);) ++level;
+   ent.statEND = M_Random(0, level / 3); level -= ent.statEND;
+   ent.gunFast = M_Random(0, level / 2); level -= ent.gunFast;
+   ent.statSTR = M_Random(0, level / 2); level -= ent.statSTR;
+   ent.statVIT = M_Random(0, level / 2); level -= ent.statVIT;
+   ent.magBolt = M_Random(0, level / 1); level -= ent.magBolt;
+   ent.statWIS = M_Random(0, level / 1); level -= ent.statWIS;
+   ent.statINT = M_Random(0, level / 1); level -= ent.statINT;
+   ent.statCHA = level; /* Dump stat. */ level -= ent.statCHA;
 
    // Calculate stat-based values.
    ent.ammo   = P_Entity_AmmoMax(ent);

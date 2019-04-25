@@ -91,6 +91,7 @@ unsigned P_Entity_Level(P_Entity ent)
    return
       ent.gunFast +
       ent.gunHard +
+      ent.gunRock +
       ent.gunWide +
 
       ent.magBolt +
@@ -212,6 +213,7 @@ void P_Entity_StoreLoad(P_Entity ent, P_EntityStore const *store)
    ent.attack2  = store->attack2;
    ent.gunFast  = store->gunFast;
    ent.gunHard  = store->gunHard;
+   ent.gunRock  = store->gunRock;
    ent.gunWide  = store->gunWide;
    ent.magBolt  = store->magBolt;
    ent.health   = store->health;
@@ -234,6 +236,7 @@ void P_Entity_StoreSave(P_Entity ent, P_EntityStore *store)
    store->attack2  = ent.attack2;
    store->gunFast  = ent.gunFast;
    store->gunHard  = ent.gunHard;
+   store->gunRock  = ent.gunRock;
    store->gunWide  = ent.gunWide;
    store->magBolt  = ent.magBolt;
    store->health   = ent.health > 0 ? ent.health : 100;
@@ -254,6 +257,7 @@ unsigned P_EntityStore_Level(P_EntityStore *store)
    return
       store->gunFast +
       store->gunHard +
+      store->gunRock +
       store->gunWide +
 
       store->magBolt +

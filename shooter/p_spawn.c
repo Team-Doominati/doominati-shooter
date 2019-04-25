@@ -52,10 +52,106 @@ static P_Entity P_SpawnBase(int x, int y)
    return ent;
 }
 
+//
+// P_Rocket_CollideF
+//
+DGE_Callback
+static unsigned P_Rocket_CollideF(unsigned self, unsigned id)
+{
+   return false;
+}
+
+//
+// P_Rocket_CollideI
+//
+DGE_Callback
+static unsigned P_Rocket_CollideI(unsigned self_, unsigned id)
+{
+   P_Rocket self = {self_};
+   P_Entity ent  = {DGE_Object_Cast(id, DGE_OT_Entity)};
+
+   // Don't collide if already dead.
+   if(self.health <= 0) return false;
+
+   if(ent.id)
+   {
+      if(self.team == ent.team)
+         return false;
+   }
+
+   self.health = 0;
+   return true;
+}
+
+//
+// P_Rocket_Think
+//
+DGE_Callback
+static void P_Rocket_Think(unsigned self_)
+{
+   P_Rocket self = {self_};
+
+   if(self.health <= 0)
+   {
+      P_AreaDamage((P_Entity){self.id}, self.damage, self.damage);
+
+      DGE_PhysicsThinker_Unblock(self.id);
+      DGE_Thinker_Unlink(self.id);
+
+      return;
+   }
+
+   if(abshk(self.vx) < self.speed && abshk(self.vy) < self.speed)
+   {
+      self.vx = self.vx + self.ax;
+      self.vy = self.vy + self.ay;
+   }
+}
+
 
 //----------------------------------------------------------------------------|
 // Extern Functions                                                           |
 //
+
+//
+// P_SpawnBullet
+//
+unsigned P_SpawnBullet(unsigned owner_, int damage, float angle, DGE_Fixed speed)
+{
+   P_Entity owner = {owner_};
+   DGE_MissileEntity ent = {DGE_MissileEntity_Create(0)};
+
+   ent.damage = damage;
+   ent.health = 10;
+   ent.owner  = owner.id;
+   ent.team   = owner.team;
+
+   ent.cr = owner.cr;
+   ent.cg = 1.0ulr;
+   ent.cb = owner.cg;
+
+   ent.x = owner.x;
+   ent.y = owner.y;
+   ent.z = owner.z;
+
+   ent.sx = 8;
+   ent.sy = 8;
+   ent.sz = 8;
+
+   ent.rsx = 8;
+   ent.rsy = 8;
+
+   float x, y;
+   sincosf(angle, &y, &x);
+   ent.vx = owner.vx + x * speed;
+   ent.vy = owner.vy + y * speed;
+
+   ent.sprite = R_TexEntity_Bullet;
+
+   DGE_PhysicsThinker_Block(ent.id);
+
+   return ent.id;
+}
 
 //
 // P_SpawnEnemy
@@ -97,46 +193,6 @@ unsigned P_SpawnEnemy(int x, int y)
    DGE_Task_Create(0, (DGE_CallbackType)P_Think_Enemy, ent.id);
 
    ++P_MapCur->mobjC;
-
-   return ent.id;
-}
-
-//
-// P_SpawnMissile
-//
-unsigned P_SpawnMissile(unsigned owner_, int damage, float angle, DGE_Fixed speed)
-{
-   P_Entity owner = {owner_};
-   DGE_MissileEntity ent = {DGE_MissileEntity_Create(0)};
-
-   ent.damage = damage;
-   ent.health = 10;
-   ent.owner  = owner.id;
-   ent.team   = owner.team;
-
-   ent.cr = owner.cr;
-   ent.cg = owner.cr;
-   ent.cb = owner.cg;
-
-   ent.x = owner.x;
-   ent.y = owner.y;
-   ent.z = owner.z;
-
-   ent.sx = 4;
-   ent.sy = 4;
-   ent.sz = 4;
-
-   ent.rsx = 4;
-   ent.rsy = 4;
-
-   float x, y;
-   sincosf(angle, &y, &x);
-   ent.vx = owner.vx + x * speed;
-   ent.vy = owner.vy + y * speed;
-
-   ent.sprite = R_TexEntity_Missile;
-
-   DGE_PhysicsThinker_Block(ent.id);
 
    return ent.id;
 }
@@ -192,6 +248,54 @@ unsigned P_SpawnPlayerStart(void)
    }
 
    return P_SpawnPlayer(x, y);
+}
+
+//
+// P_SpawnRocket
+//
+unsigned P_SpawnRocket(unsigned owner_, int damage, float angle, DGE_Fixed speed)
+{
+   P_Entity owner = {owner_};
+   P_Rocket ent = {DGE_ScriptedEntity_Create(4)};
+
+   ent.collideF = P_Rocket_CollideF;
+   ent.collideI = P_Rocket_CollideI;
+   ent.think    = P_Rocket_Think;
+
+   ent.damage = damage;
+   ent.health = 10;
+   ent.team   = owner.team;
+
+   ent.cr = owner.cr;
+   ent.cg = 1.0ulr;
+   ent.cb = owner.cg;
+
+   ent.x = owner.x;
+   ent.y = owner.y;
+   ent.z = owner.z;
+
+   ent.sx = 8;
+   ent.sy = 8;
+   ent.sz = 8;
+
+   ent.rsx = 8;
+   ent.rsy = 8;
+
+   float x, y;
+   sincosf(angle, &y, &x);
+   ent.vx = owner.vx;
+   ent.vy = owner.vy;
+
+   ent.ax = x;
+   ent.ay = y;
+
+   ent.speed = speed;
+
+   ent.sprite = R_TexEntity_Rocket[M_AngleToIndex(angle, 8)];
+
+   DGE_PhysicsThinker_Block(ent.id);
+
+   return ent.id;
 }
 
 // EOF

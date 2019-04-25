@@ -54,6 +54,7 @@ typedef enum P_EntityMem
 
    P_EntityMem_GunFast,
    P_EntityMem_GunHard,
+   P_EntityMem_GunRock,
    P_EntityMem_GunWide,
 
    P_EntityMem_HealFrac,
@@ -107,6 +108,7 @@ struct P_Entity
 
    DGE_PropMem(unsigned, gunFast, DGE_OME_Entity + P_EntityMem_GunFast)
    DGE_PropMem(unsigned, gunHard, DGE_OME_Entity + P_EntityMem_GunHard)
+   DGE_PropMem(unsigned, gunRock, DGE_OME_Entity + P_EntityMem_GunRock)
    DGE_PropMem(unsigned, gunWide, DGE_OME_Entity + P_EntityMem_GunWide)
 
    DGE_PropMem(unsigned, healFrac, DGE_OME_Entity + P_EntityMem_HealFrac)
@@ -136,6 +138,7 @@ typedef struct P_EntityStore
    unsigned     ammo;
    unsigned     gunFast;
    unsigned     gunHard;
+   unsigned     gunRock;
    unsigned     gunWide;
    unsigned     magBolt;
    unsigned     health;
@@ -163,6 +166,21 @@ typedef struct P_Map
    char     name[32];
    char     next[32];
 } P_Map;
+
+//
+// P_Rocket
+//
+typedef struct P_Rocket
+{
+   DGE_Unsig id;
+
+   DGE_ScriptedEntityProps()
+
+   DGE_PropMem(DGE_Fixed, ax,     DGE_OME_ScriptedEntity + 0)
+   DGE_PropMem(DGE_Fixed, ay,     DGE_OME_ScriptedEntity + 1)
+   DGE_PropMem(int,       damage, DGE_OME_ScriptedEntity + 2)
+   DGE_PropMem(DGE_Fixed, speed,  DGE_OME_ScriptedEntity + 3)
+} P_Rocket;
 
 //
 // P_Tile
@@ -198,9 +216,12 @@ extern DGE_Team P_TeamPlayer;
 // Extern Functions                                                           |
 //
 
+void P_AreaDamage(P_Entity src, DGE_Fixed r, int dmg);
+
 unsigned P_Attack_Bolt(P_Entity ent, float angle);
 unsigned P_Attack_Fast(P_Entity ent, float angle);
 unsigned P_Attack_Hard(P_Entity ent, float angle);
+unsigned P_Attack_Rock(P_Entity ent, float angle);
 unsigned P_Attack_Slow(P_Entity ent, float angle);
 unsigned P_Attack_Wide(P_Entity ent, float angle);
 
@@ -252,12 +273,14 @@ void P_ShopInit(void);
 void P_ShopQuit(void);
 void P_ShopTask(void);
 
-unsigned P_SpawnEnemy(int x, int y);
+unsigned P_SpawnBullet(unsigned owner, int damage, float angle, DGE_Fixed speed);
 
-unsigned P_SpawnMissile(unsigned owner, int damage, float angle, DGE_Fixed speed);
+unsigned P_SpawnEnemy(int x, int y);
 
 unsigned P_SpawnPlayer(int x, int y);
 unsigned P_SpawnPlayerStart(void);
+
+unsigned P_SpawnRocket(unsigned owner, int damage, float angle, DGE_Fixed speed);
 
 M_Entry void P_Think_Enemy(P_Entity ent);
 M_Entry void P_Think_Player(P_Entity ent);

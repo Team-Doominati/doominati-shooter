@@ -75,9 +75,17 @@ build/data/boot/gamedefs: gamedefs.txt | build/data/boot
 ##
 
 shooter_gfx = \
-	build/data/gfx/Entity/Missile.png \
+	build/data/gfx/Entity/Bullet.png \
 	build/data/gfx/Entity/Mobj.png \
 	build/data/gfx/Entity/Rank.png \
+	build/data/gfx/Entity/Rocket0.png \
+	build/data/gfx/Entity/Rocket1.png \
+	build/data/gfx/Entity/Rocket2.png \
+	build/data/gfx/Entity/Rocket3.png \
+	build/data/gfx/Entity/Rocket4.png \
+	build/data/gfx/Entity/Rocket5.png \
+	build/data/gfx/Entity/Rocket6.png \
+	build/data/gfx/Entity/Rocket7.png \
 	build/data/gfx/GUI/DigLarge/20.png \
 	build/data/gfx/GUI/DigLarge/-.png \
 	build/data/gfx/GUI/DigLarge/0.png \
@@ -125,6 +133,7 @@ shooter_gfx = \
 	build/data/gfx/GUI/Edge/TR.png \
 	build/data/gfx/GUI/Icon/Blank.png \
 	build/data/gfx/GUI/Icon/GunFast.png \
+	build/data/gfx/GUI/Icon/GunRock.png \
 	build/data/gfx/GUI/Icon/GunSlow.png \
 	build/data/gfx/GUI/Icon/GunWide.png \
 	build/data/gfx/GUI/Icon/MagBolt.png \

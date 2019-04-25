@@ -63,6 +63,9 @@
 #define M_EntryMain
 #endif
 
+#define M_PI  3.141592653589793238462643383279502884
+#define M_PIf 3.141592653589793238462643383279502884f
+
 //
 // M_Shell
 //
@@ -141,6 +144,8 @@ extern int M_ScreenW;
 //----------------------------------------------------------------------------|
 // Extern Functions                                                           |
 //
+
+unsigned M_AngleToIndex(float angle, unsigned steps);
 
 unsigned long M_Fib(unsigned i);
 

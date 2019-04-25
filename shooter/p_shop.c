@@ -78,6 +78,7 @@ P_ShopItem_Decl(BuyAmmo);
 P_ShopItem_Decl(BuyHeal);
 P_ShopItem_Decl(GunFast);
 P_ShopItem_Decl(GunHard);
+P_ShopItem_Decl(GunRock);
 P_ShopItem_Decl(GunWide);
 P_ShopItem_Decl(MagBolt);
 P_ShopItem_Decl(StatCHA);
@@ -96,7 +97,8 @@ static P_ShopItem P_ShopItems[] =
       .action=P_Action_GunHard, .cost=P_Cost_GunHard, .level=P_Level_GunHard},
    {.cond=P_Cond_GunWide, .attack=P_Attack_Wide,
       .action=P_Action_GunWide, .cost=P_Cost_GunWide, .level=P_Level_GunWide},
-   {.cond=P_Cond_Never},
+   {.cond=P_Cond_GunRock, .attack=P_Attack_Rock,
+      .action=P_Action_GunRock, .cost=P_Cost_GunRock, .level=P_Level_GunRock},
    {.cond=P_Cond_Never},
    {.cond=P_Cond_Never},
    {.cond=P_Cond_Never},
@@ -158,6 +160,7 @@ P_ShopItem_ActionDef(BuyAmmo, ammo,  100, P_Entity_AmmoMax(ent))
 P_ShopItem_ActionDef(BuyHeal, health, 10, P_Entity_HealthMax(ent))
 P_ShopItem_ActionDef(GunFast, gunFast, 1, 100)
 P_ShopItem_ActionDef(GunHard, gunHard, 1, 100)
+P_ShopItem_ActionDef(GunRock, gunRock, 1, 100)
 P_ShopItem_ActionDef(GunWide, gunWide, 1, 100)
 P_ShopItem_ActionDef(MagBolt, magBolt, 1, 100)
 P_ShopItem_ActionDef(StatCHA, statCHA, 1, 100)
@@ -170,6 +173,7 @@ P_ShopItem_ActionDef(StatWIS, statWIS, 1, 100)
 //
 // P_Cond_*
 //
+static bool P_Cond_GunRock(P_Entity ent) {return ent.gunRock;}
 static bool P_Cond_GunWide(P_Entity ent) {return ent.gunWide;}
 
 //
@@ -181,6 +185,7 @@ static P_ScoreT P_Cost_BuyHeal(P_Entity ent)
    {return P_CostMul(P_CostMul(100, 101, P_Entity_Level(ent)), 98, ent.statCHA);}
 P_ShopItem_CostDef(GunFast, gunFast, 1000, 99)
 P_ShopItem_CostDef(GunHard, gunHard, 1000, 99)
+P_ShopItem_CostDef(GunRock, gunRock, 1000, 99)
 P_ShopItem_CostDef(GunWide, gunWide, 1000, 99)
 P_ShopItem_CostDef(MagBolt, magBolt, 1000, 99)
 P_ShopItem_CostDef(StatCHA, statCHA, 1000, 99)
@@ -206,6 +211,7 @@ static unsigned P_Level_BuyAmmo(P_Entity ent) {return ent.ammo;}
 static unsigned P_Level_BuyHeal(P_Entity ent) {return ent.health > 0 ? ent.health : 0;}
 static unsigned P_Level_GunFast(P_Entity ent) {return ent.gunFast;}
 static unsigned P_Level_GunHard(P_Entity ent) {return ent.gunHard;}
+static unsigned P_Level_GunRock(P_Entity ent) {return ent.gunRock;}
 static unsigned P_Level_GunWide(P_Entity ent) {return ent.gunWide;}
 static unsigned P_Level_MagBolt(P_Entity ent) {return ent.magBolt;}
 static unsigned P_Level_StatCHA(P_Entity ent) {return ent.statCHA;}
@@ -231,7 +237,7 @@ void P_ShopInit(void)
    items[ 0].icon = R_TexGUI_Icon_GunFast;
    items[ 1].icon = R_TexGUI_Icon_GunSlow;
    items[ 2].icon = R_TexGUI_Icon_GunWide;
-   items[ 3].icon = R_TexGUI_Icon_Blank;
+   items[ 3].icon = R_TexGUI_Icon_GunRock;
    items[ 4].icon = R_TexGUI_Icon_Blank;
    items[ 5].icon = R_TexGUI_Icon_Blank;
    items[ 6].icon = R_TexGUI_Icon_Blank;

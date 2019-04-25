@@ -20,9 +20,10 @@
 unsigned R_CharTabL[256];
 unsigned R_CharTabS[256];
 
-unsigned R_TexEntity_Missile;
+unsigned R_TexEntity_Bullet;
 unsigned R_TexEntity_Mobj;
 unsigned R_TexEntity_Rank;
+unsigned R_TexEntity_Rocket[8];
 
 unsigned R_TexGUI_EdgeBL;
 unsigned R_TexGUI_EdgeBR;
@@ -40,6 +41,7 @@ unsigned R_TexGUI_EdgeTR;
 unsigned R_TexGUI_Icon_Blank;
 
 unsigned R_TexGUI_Icon_GunFast;
+unsigned R_TexGUI_Icon_GunRock;
 unsigned R_TexGUI_Icon_GunSlow;
 unsigned R_TexGUI_Icon_GunWide;
 
@@ -119,9 +121,17 @@ void R_Init(void)
    R_CharTabS['O'] = R_CharTabS['0'];
    R_CharTabS['S'] = R_CharTabS['5'];
 
-   R_TexEntity_Missile = DGE_Texture_Get(M_Str("@gfx/Entity/Missile.png"));
-   R_TexEntity_Mobj    = DGE_Texture_Get(M_Str("@gfx/Entity/Mobj.png"));
-   R_TexEntity_Rank    = DGE_Texture_Get(M_Str("@gfx/Entity/Rank.png"));
+   R_TexEntity_Bullet    = DGE_Texture_Get(M_Str("@gfx/Entity/Bullet.png"));
+   R_TexEntity_Mobj      = DGE_Texture_Get(M_Str("@gfx/Entity/Mobj.png"));
+   R_TexEntity_Rank      = DGE_Texture_Get(M_Str("@gfx/Entity/Rank.png"));
+   R_TexEntity_Rocket[0] = DGE_Texture_Get(M_Str("@gfx/Entity/Rocket0.png"));
+   R_TexEntity_Rocket[1] = DGE_Texture_Get(M_Str("@gfx/Entity/Rocket1.png"));
+   R_TexEntity_Rocket[2] = DGE_Texture_Get(M_Str("@gfx/Entity/Rocket2.png"));
+   R_TexEntity_Rocket[3] = DGE_Texture_Get(M_Str("@gfx/Entity/Rocket3.png"));
+   R_TexEntity_Rocket[4] = DGE_Texture_Get(M_Str("@gfx/Entity/Rocket4.png"));
+   R_TexEntity_Rocket[5] = DGE_Texture_Get(M_Str("@gfx/Entity/Rocket5.png"));
+   R_TexEntity_Rocket[6] = DGE_Texture_Get(M_Str("@gfx/Entity/Rocket6.png"));
+   R_TexEntity_Rocket[7] = DGE_Texture_Get(M_Str("@gfx/Entity/Rocket7.png"));
 
    R_TexGUI_EdgeBL = DGE_Texture_Get(M_Str("@gfx/GUI/Edge/BL.png"));
    R_TexGUI_EdgeBR = DGE_Texture_Get(M_Str("@gfx/GUI/Edge/BR.png"));
@@ -139,6 +149,7 @@ void R_Init(void)
    R_TexGUI_Icon_Blank = DGE_Texture_Get(M_Str("@gfx/GUI/Icon/Blank.png"));
 
    R_TexGUI_Icon_GunFast = DGE_Texture_Get(M_Str("@gfx/GUI/Icon/GunFast.png"));
+   R_TexGUI_Icon_GunRock = DGE_Texture_Get(M_Str("@gfx/GUI/Icon/GunRock.png"));
    R_TexGUI_Icon_GunSlow = DGE_Texture_Get(M_Str("@gfx/GUI/Icon/GunSlow.png"));
    R_TexGUI_Icon_GunWide = DGE_Texture_Get(M_Str("@gfx/GUI/Icon/GunWide.png"));
 

@@ -12,10 +12,27 @@
 
 #include "m_defs.h"
 
+#include <math.h>
+
 
 //----------------------------------------------------------------------------|
 // Extern Functions                                                           |
 //
+
+//
+// M_AngleToIndex
+//
+unsigned M_AngleToIndex(float angle, unsigned steps)
+{
+   float steprad = M_PIf / steps;
+
+   if(angle < -steprad)
+      return (int)(-angle * (steps / 2) / M_PIf + 0.5f);
+   else if(angle > steprad)
+      return steps - (int)(angle * (steps / 2) / M_PIf + 0.5f);
+   else
+      return 0;
+}
 
 //
 // M_Fib

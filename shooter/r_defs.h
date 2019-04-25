@@ -23,9 +23,10 @@
 extern unsigned R_CharTabL[256];
 extern unsigned R_CharTabS[256];
 
-extern unsigned R_TexEntity_Missile;
+extern unsigned R_TexEntity_Bullet;
 extern unsigned R_TexEntity_Mobj;
 extern unsigned R_TexEntity_Rank;
+extern unsigned R_TexEntity_Rocket[8];
 
 extern unsigned R_TexGUI_EdgeBL;
 extern unsigned R_TexGUI_EdgeBR;
@@ -43,6 +44,7 @@ extern unsigned R_TexGUI_EdgeTR;
 extern unsigned R_TexGUI_Icon_Blank;
 
 extern unsigned R_TexGUI_Icon_GunFast;
+extern unsigned R_TexGUI_Icon_GunRock;
 extern unsigned R_TexGUI_Icon_GunSlow;
 extern unsigned R_TexGUI_Icon_GunWide;
 

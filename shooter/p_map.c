@@ -295,6 +295,8 @@ void P_Map_Quit(P_Map *map)
       free(map->data), map->data = NULL;
 
    P_StateCur = P_State_Stop;
+
+   P_Save();
 }
 
 //

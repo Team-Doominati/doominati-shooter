@@ -40,6 +40,7 @@ shooter_IR = \
 	build/ir/shooter/p_entity.ir \
 	build/ir/shooter/p_main.ir \
 	build/ir/shooter/p_map.ir \
+	build/ir/shooter/p_save.ir \
 	build/ir/shooter/p_score.ir \
 	build/ir/shooter/p_shop.ir \
 	build/ir/shooter/p_spawn.ir \

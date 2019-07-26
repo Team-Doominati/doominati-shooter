@@ -253,6 +253,8 @@ void P_Entity_StoreSave(P_Entity ent, P_EntityStore *store);
 
 unsigned P_EntityStore_Level(P_EntityStore *store);
 
+void P_Load(void);
+
 bool P_Map_InExit(P_Map *map);
 
 void P_Map_Init(P_Map *map);
@@ -265,6 +267,8 @@ void P_Map_Quit(P_Map *map);
 void P_Map_Read(P_Map *map, FILE *in);
 void P_Map_ReadData(P_Map *map, char *data, FILE *in);
 bool P_Map_ReadHead(P_Map *map, FILE *in);
+
+void P_Save(void);
 
 void P_Score_Add(P_ScoreT score);
 void P_Score_Sub(P_ScoreT score);

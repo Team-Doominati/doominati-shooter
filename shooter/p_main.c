@@ -39,6 +39,8 @@ void P_Init(void)
    DGE_Object_RefAdd(P_TeamPlayer.id = DGE_Team_Create(0));
 
    P_ShopInit();
+
+   P_Load();
 }
 
 //

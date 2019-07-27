@@ -406,33 +406,31 @@ M_ShellDefn(EditSave)
    }
    else if(argc == 2)
    {
-      size_t len = P_EditH * P_EditW * 2 + P_EditH * 2 + 33;
-      char  *buf = malloc(len), *itr = buf;
+      FILE *out = fopen(argv[1], "w");
+      if(!out)
+         return fprintf(stderr, "failed to open '%s'\n", argv[1]), 1;
 
-      itr += sprintf(itr, "size %u %u\n\n", P_EditW, P_EditH);
+      fprintf(out, "size %u %u\n\n", P_EditW, P_EditH);
 
       for(int ty = 0; ty != P_EditH; ++ty)
       {
          for(int tx = 0; tx != P_EditW; ++tx)
-            *itr++ = P_EditTiles[ty * P_EditW + tx].type;
-         *itr++ = '\n';
+            fputc(P_EditTiles[ty * P_EditW + tx].type, out);
+         fputc('\n', out);
       }
 
       for(int ty = 0; ty != P_EditH; ++ty)
       {
          for(int tx = 0; tx != P_EditW; ++tx)
-            *itr++ = P_EditMobjs[ty * P_EditW + tx].type;
-         *itr++ = '\n';
+            fputc(P_EditMobjs[ty * P_EditW + tx].type, out);
+         fputc('\n', out);
       }
 
-      itr += sprintf(itr, "EOF\n");
+      fprintf(out, "EOF\n");
 
-      if(DGE_File_Create(argv[1], buf, itr - buf) < 0)
-         fprintf(stderr, "failed to write '%s'\n", argv[1]);
-      else
-         printf("map written to '%s'\n", argv[1]);
+      printf("map written to '%s'\n", argv[1]);
 
-      free(buf);
+      fclose(out);
    }
 
    return 0;
